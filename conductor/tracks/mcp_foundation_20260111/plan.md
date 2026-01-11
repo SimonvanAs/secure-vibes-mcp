@@ -90,11 +90,11 @@
   - [x] Sub-task: Implement language detection from file extensions
   - [x] Sub-task: Detect common frameworks from manifest files
 
-- [~] Task 5.2: Implement SECURITY.md generation
-  - [ ] Sub-task: Write tests for document generation
-  - [ ] Sub-task: Create template for SECURITY.md structure
-  - [ ] Sub-task: Generate architecture overview section
-  - [ ] Sub-task: Generate security-relevant observations section
+- [x] Task 5.2: Implement SECURITY.md generation `83f746f`
+  - [x] Sub-task: Write tests for document generation
+  - [x] Sub-task: Create template for SECURITY.md structure
+  - [x] Sub-task: Generate architecture overview section
+  - [x] Sub-task: Generate security-relevant observations section
 
 - [ ] Task 5.3: Implement run_assessment tool handler
   - [ ] Sub-task: Write integration tests for full assessment flow
