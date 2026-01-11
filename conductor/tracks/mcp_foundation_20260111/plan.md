@@ -111,7 +111,7 @@
 
 ## Phase 6: Integration and Polish
 
-- [ ] Task 6.1: End-to-end integration testing
+- [~] Task 6.1: End-to-end integration testing
   - [ ] Sub-task: Write E2E test for complete assessment workflow
   - [ ] Sub-task: Test tool registration and invocation via MCP protocol
   - [ ] Sub-task: Verify artifact persistence across tool calls
