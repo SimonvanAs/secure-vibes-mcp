@@ -350,3 +350,119 @@ class TestArtifactStatus:
             assert artifact_status["exists"] is False
             assert artifact_status["size"] is None
             assert artifact_status["modified_at"] is None
+
+
+class TestStorageErrors:
+    """Tests for storage error handling."""
+
+    def test_storage_error_import(self):
+        """Test that StorageError can be imported."""
+        from securevibes_mcp.storage import StorageError
+
+        assert StorageError is not None
+
+    def test_storage_error_is_exception(self):
+        """Test that StorageError is an Exception subclass."""
+        from securevibes_mcp.storage import StorageError
+
+        assert issubclass(StorageError, Exception)
+
+    def test_storage_error_has_code(self):
+        """Test that StorageError has an error code."""
+        from securevibes_mcp.storage import StorageError
+
+        error = StorageError("test message", code="TEST_ERROR")
+        assert error.code == "TEST_ERROR"
+        assert error.message == "test message"
+
+    def test_storage_error_str(self):
+        """Test that StorageError string representation is correct."""
+        from securevibes_mcp.storage import StorageError
+
+        error = StorageError("test message", code="TEST_ERROR")
+        assert "TEST_ERROR" in str(error)
+        assert "test message" in str(error)
+
+    def test_storage_error_to_dict(self):
+        """Test that StorageError can be converted to dict."""
+        from securevibes_mcp.storage import StorageError
+
+        error = StorageError("test message", code="TEST_ERROR")
+        error_dict = error.to_dict()
+
+        assert error_dict["error"] is True
+        assert error_dict["code"] == "TEST_ERROR"
+        assert error_dict["message"] == "test message"
+
+    def test_write_artifact_permission_error(self, tmp_path: Path):
+        """Test that permission errors are handled gracefully."""
+        from securevibes_mcp.storage import ScanStateManager, StorageError
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+
+        # Make directory read-only
+        import os
+
+        os.chmod(manager.storage_dir, 0o444)
+
+        try:
+            with pytest.raises(StorageError) as exc_info:
+                manager.write_artifact("SECURITY.md", "content")
+
+            assert exc_info.value.code == "PERMISSION_DENIED"
+        finally:
+            # Restore permissions for cleanup
+            os.chmod(manager.storage_dir, 0o755)
+
+    def test_read_artifact_permission_error(self, tmp_path: Path):
+        """Test that read permission errors return None gracefully."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+        manager.write_artifact("SECURITY.md", "content")
+
+        # Make file unreadable
+        import os
+
+        artifact_path = manager.storage_dir / "SECURITY.md"
+        os.chmod(artifact_path, 0o000)
+
+        try:
+            # Should return None instead of raising
+            result = manager.read_artifact("SECURITY.md")
+            assert result is None
+        finally:
+            # Restore permissions for cleanup
+            os.chmod(artifact_path, 0o644)
+
+    def test_init_permission_error(self, tmp_path: Path):
+        """Test that init handles permission errors."""
+        import os
+
+        from securevibes_mcp.storage import ScanStateManager, StorageError
+
+        # Make parent directory read-only
+        os.chmod(tmp_path, 0o444)
+
+        try:
+            manager = ScanStateManager(tmp_path)
+            with pytest.raises(StorageError) as exc_info:
+                manager.init()
+
+            assert exc_info.value.code == "PERMISSION_DENIED"
+        finally:
+            # Restore permissions
+            os.chmod(tmp_path, 0o755)
+
+    def test_storage_error_with_path(self):
+        """Test that StorageError can include a path."""
+        from securevibes_mcp.storage import StorageError
+
+        error = StorageError(
+            "test message", code="TEST_ERROR", path="/some/path"
+        )
+        assert error.path == "/some/path"
+        error_dict = error.to_dict()
+        assert error_dict["path"] == "/some/path"

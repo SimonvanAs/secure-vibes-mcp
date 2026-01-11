@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+from securevibes_mcp.storage.errors import StorageError
+
 # Valid artifact names that can be stored
 VALID_ARTIFACTS = frozenset(
     {
@@ -38,8 +40,18 @@ class ScanStateManager:
 
         Creates the `.securevibes/` directory if it doesn't exist.
         Idempotent - safe to call multiple times.
+
+        Raises:
+            StorageError: If directory creation fails due to permissions.
         """
-        self.storage_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            self.storage_dir.mkdir(parents=True, exist_ok=True)
+        except PermissionError as e:
+            raise StorageError(
+                f"Cannot create storage directory: {e}",
+                code="PERMISSION_DENIED",
+                path=str(self.storage_dir),
+            ) from e
 
     def _validate_artifact_name(self, name: str) -> None:
         """Validate that the artifact name is allowed.
@@ -67,11 +79,19 @@ class ScanStateManager:
 
         Raises:
             ValueError: If the artifact name is invalid.
+            StorageError: If write fails due to permissions.
         """
         self._validate_artifact_name(name)
         self.init()  # Ensure directory exists
         artifact_path = self.storage_dir / name
-        artifact_path.write_text(content)
+        try:
+            artifact_path.write_text(content)
+        except PermissionError as e:
+            raise StorageError(
+                f"Cannot write artifact: {e}",
+                code="PERMISSION_DENIED",
+                path=str(artifact_path),
+            ) from e
 
     def read_artifact(self, name: str) -> str | None:
         """Read an artifact from storage.
@@ -80,7 +100,7 @@ class ScanStateManager:
             name: The artifact name to read.
 
         Returns:
-            The artifact content, or None if not found.
+            The artifact content, or None if not found or not readable.
         """
         if not self.storage_dir.exists():
             return None
@@ -89,7 +109,10 @@ class ScanStateManager:
         if not artifact_path.exists():
             return None
 
-        return artifact_path.read_text()
+        try:
+            return artifact_path.read_text()
+        except PermissionError:
+            return None
 
     def artifact_exists(self, name: str) -> bool:
         """Check if an artifact exists.

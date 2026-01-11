@@ -56,7 +56,7 @@
   - [x] Sub-task: Implement `get_status()` method returning all artifact states
   - [x] Sub-task: Include existence, modification time, and size for each artifact
 
-- [ ] Task 3.3: Implement error handling for storage operations
+- [~] Task 3.3: Implement error handling for storage operations
   - [ ] Sub-task: Write tests for error scenarios (permission denied, disk full, etc.)
   - [ ] Sub-task: Create structured error response format
   - [ ] Sub-task: Handle file system errors gracefully
