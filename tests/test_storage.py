@@ -1,6 +1,7 @@
 """Tests for artifact storage layer."""
 
 import json
+import time
 from pathlib import Path
 
 import pytest
@@ -229,3 +230,123 @@ class TestValidArtifactNames:
 
         with pytest.raises(ValueError, match="Invalid artifact name"):
             manager.write_artifact("/etc/passwd", "malicious")
+
+
+class TestArtifactStatus:
+    """Tests for artifact status checking."""
+
+    def test_get_status_returns_dict(self, tmp_path: Path):
+        """Test that get_status returns a dictionary."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+
+        status = manager.get_status()
+        assert isinstance(status, dict)
+
+    def test_get_status_includes_all_artifacts(self, tmp_path: Path):
+        """Test that get_status includes all valid artifact names."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+
+        status = manager.get_status()
+        expected_artifacts = [
+            "SECURITY.md",
+            "THREAT_MODEL.json",
+            "VULNERABILITIES.json",
+            "DAST_VALIDATION.json",
+            "scan_results.json",
+        ]
+        for artifact in expected_artifacts:
+            assert artifact in status, f"Missing artifact: {artifact}"
+
+    def test_get_status_missing_artifact(self, tmp_path: Path):
+        """Test status for missing artifact."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+
+        status = manager.get_status()
+        artifact_status = status["SECURITY.md"]
+
+        assert artifact_status["exists"] is False
+        assert artifact_status["size"] is None
+        assert artifact_status["modified_at"] is None
+
+    def test_get_status_existing_artifact(self, tmp_path: Path):
+        """Test status for existing artifact."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+        content = "# Security Analysis\n\nTest content here."
+        manager.write_artifact("SECURITY.md", content)
+
+        status = manager.get_status()
+        artifact_status = status["SECURITY.md"]
+
+        assert artifact_status["exists"] is True
+        assert artifact_status["size"] == len(content)
+        assert artifact_status["modified_at"] is not None
+        assert isinstance(artifact_status["modified_at"], float)
+
+    def test_get_status_multiple_artifacts(self, tmp_path: Path):
+        """Test status with multiple artifacts present."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+        manager.write_artifact("SECURITY.md", "security content")
+        manager.write_artifact("THREAT_MODEL.json", '{"threats": []}')
+
+        status = manager.get_status()
+
+        assert status["SECURITY.md"]["exists"] is True
+        assert status["THREAT_MODEL.json"]["exists"] is True
+        assert status["VULNERABILITIES.json"]["exists"] is False
+
+    def test_get_status_size_is_accurate(self, tmp_path: Path):
+        """Test that reported size matches actual file size."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+        content = "A" * 1000  # 1000 bytes
+        manager.write_artifact("SECURITY.md", content)
+
+        status = manager.get_status()
+        assert status["SECURITY.md"]["size"] == 1000
+
+    def test_get_status_modified_at_is_recent(self, tmp_path: Path):
+        """Test that modified_at timestamp is recent."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        before = time.time()
+        manager = ScanStateManager(tmp_path)
+        manager.init()
+        manager.write_artifact("SECURITY.md", "content")
+        after = time.time()
+
+        status = manager.get_status()
+        modified_at = status["SECURITY.md"]["modified_at"]
+
+        assert before <= modified_at <= after
+
+    def test_get_status_no_init(self, tmp_path: Path):
+        """Test get_status when directory not initialized."""
+        from securevibes_mcp.storage import ScanStateManager
+
+        manager = ScanStateManager(tmp_path)
+        # Don't call init()
+
+        status = manager.get_status()
+
+        # All artifacts should show as non-existent
+        for _artifact_name, artifact_status in status.items():
+            assert artifact_status["exists"] is False
+            assert artifact_status["size"] is None
+            assert artifact_status["modified_at"] is None

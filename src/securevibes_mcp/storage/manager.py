@@ -105,3 +105,34 @@ class ScanStateManager:
 
         artifact_path = self.storage_dir / name
         return artifact_path.exists()
+
+    def get_status(self) -> dict[str, dict[str, bool | int | float | None]]:
+        """Get status of all artifacts.
+
+        Returns:
+            Dictionary mapping artifact names to their status.
+            Each status contains:
+            - exists: Whether the artifact exists
+            - size: File size in bytes (None if not exists)
+            - modified_at: Modification timestamp as float (None if not exists)
+        """
+        status: dict[str, dict[str, bool | int | float | None]] = {}
+
+        for artifact_name in VALID_ARTIFACTS:
+            artifact_path = self.storage_dir / artifact_name
+
+            if self.storage_dir.exists() and artifact_path.exists():
+                stat = artifact_path.stat()
+                status[artifact_name] = {
+                    "exists": True,
+                    "size": stat.st_size,
+                    "modified_at": stat.st_mtime,
+                }
+            else:
+                status[artifact_name] = {
+                    "exists": False,
+                    "size": None,
+                    "modified_at": None,
+                }
+
+        return status
