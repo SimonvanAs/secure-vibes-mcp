@@ -30,16 +30,16 @@
   - [x] Sub-task: Add async context manager for server lifecycle
   - [x] Sub-task: Implement environment variable configuration loading
 
-- [ ] Task 2.2: Implement tool registration framework
-  - [ ] Sub-task: Write tests for tool listing and schema validation
-  - [ ] Sub-task: Create tool registry with input/output schema definitions
-  - [ ] Sub-task: Register all 8 tools with proper JSON schemas
-  - [ ] Sub-task: Implement tool dispatch mechanism
+- [x] Task 2.2: Implement tool registration framework `d074c29`
+  - [x] Sub-task: Write tests for tool listing and schema validation
+  - [x] Sub-task: Create tool registry with input/output schema definitions
+  - [x] Sub-task: Register all 8 tools with proper JSON schemas
+  - [x] Sub-task: Implement tool dispatch mechanism
 
-- [ ] Task 2.3: Add placeholder tool implementations
-  - [ ] Sub-task: Write tests for placeholder responses
-  - [ ] Sub-task: Implement placeholder handlers for unimplemented tools
-  - [ ] Sub-task: Return structured "not implemented" responses with tool name
+- [x] Task 2.3: Add placeholder tool implementations
+  - [x] Sub-task: Write tests for placeholder responses
+  - [x] Sub-task: Implement placeholder handlers for unimplemented tools
+  - [x] Sub-task: Return structured "not implemented" responses with tool name
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: MCP Server Core' (Protocol in workflow.md)
 

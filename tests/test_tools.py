@@ -110,3 +110,77 @@ class TestToolDispatch:
         # run_assessment requires path
         with pytest.raises((ValueError, TypeError)):
             await server.call_tool("run_assessment", {})
+
+
+class TestPlaceholderResponses:
+    """Tests for placeholder tool implementations."""
+
+    @pytest.mark.asyncio
+    async def test_placeholder_returns_not_implemented_error(self):
+        """Test that placeholder tools return not implemented error."""
+        server = SecureVibesMCPServer()
+        result = await server.call_tool("run_assessment", {"path": "/tmp/test"})
+
+        assert result["error"] is True
+        assert result["code"] == "NOT_IMPLEMENTED"
+
+    @pytest.mark.asyncio
+    async def test_placeholder_includes_tool_name(self):
+        """Test that placeholder response includes the tool name."""
+        server = SecureVibesMCPServer()
+        result = await server.call_tool("run_assessment", {"path": "/tmp/test"})
+
+        assert result["tool"] == "run_assessment"
+        assert "run_assessment" in result["message"]
+
+    @pytest.mark.asyncio
+    async def test_all_agent_tools_return_placeholder(self):
+        """Test that all agent tools return placeholder responses."""
+        server = SecureVibesMCPServer()
+        agent_tools = [
+            ("run_assessment", {"path": "/tmp"}),
+            ("run_threat_modeling", {"path": "/tmp"}),
+            ("run_code_review", {"path": "/tmp"}),
+            ("run_dast", {"path": "/tmp", "target_url": "http://localhost"}),
+            ("generate_report", {"path": "/tmp"}),
+        ]
+
+        for tool_name, args in agent_tools:
+            result = await server.call_tool(tool_name, args)
+            assert result["error"] is True, f"{tool_name} should return error"
+            assert result["code"] == "NOT_IMPLEMENTED"
+            assert result["tool"] == tool_name
+
+    @pytest.mark.asyncio
+    async def test_all_query_tools_return_placeholder(self):
+        """Test that all query tools return placeholder responses."""
+        server = SecureVibesMCPServer()
+        query_tools = [
+            ("get_scan_status", {"path": "/tmp"}),
+            ("get_artifact", {"path": "/tmp", "artifact_name": "SECURITY.md"}),
+            ("get_vulnerabilities", {"path": "/tmp"}),
+        ]
+
+        for tool_name, args in query_tools:
+            result = await server.call_tool(tool_name, args)
+            assert result["error"] is True, f"{tool_name} should return error"
+            assert result["code"] == "NOT_IMPLEMENTED"
+            assert result["tool"] == tool_name
+
+    @pytest.mark.asyncio
+    async def test_placeholder_response_structure(self):
+        """Test that placeholder response has required fields."""
+        server = SecureVibesMCPServer()
+        result = await server.call_tool("get_scan_status", {"path": "/tmp"})
+
+        # Verify all required fields are present
+        assert "error" in result
+        assert "code" in result
+        assert "message" in result
+        assert "tool" in result
+
+        # Verify types
+        assert isinstance(result["error"], bool)
+        assert isinstance(result["code"], str)
+        assert isinstance(result["message"], str)
+        assert isinstance(result["tool"], str)
