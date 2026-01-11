@@ -96,7 +96,7 @@
   - [x] Sub-task: Generate architecture overview section
   - [x] Sub-task: Generate security-relevant observations section
 
-- [ ] Task 5.3: Implement run_assessment tool handler
+- [~] Task 5.3: Implement run_assessment tool handler
   - [ ] Sub-task: Write integration tests for full assessment flow
   - [ ] Sub-task: Wire up scanning and generation components
   - [ ] Sub-task: Store artifact via ScanStateManager

@@ -4,7 +4,7 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
 from typing import Any
 
-from securevibes_mcp.tools.handlers import get_artifact, get_scan_status
+from securevibes_mcp.tools.handlers import get_artifact, get_scan_status, run_assessment
 
 
 @dataclass
@@ -263,7 +263,7 @@ def get_tool_registry() -> ToolRegistry:
             name="run_assessment",
             description="Analyzes codebase architecture and creates security baseline",
             inputSchema=ASSESSMENT_SCHEMA,
-            handler=lambda **kw: not_implemented("run_assessment", **kw),
+            handler=run_assessment,
         )
     )
 

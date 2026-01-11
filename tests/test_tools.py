@@ -119,7 +119,8 @@ class TestPlaceholderResponses:
     async def test_placeholder_returns_not_implemented_error(self):
         """Test that placeholder tools return not implemented error."""
         server = SecureVibesMCPServer()
-        result = await server.call_tool("run_assessment", {"path": "/tmp/test"})
+        # Use run_threat_modeling which is still a placeholder
+        result = await server.call_tool("run_threat_modeling", {"path": "/tmp/test"})
 
         assert result["error"] is True
         assert result["code"] == "NOT_IMPLEMENTED"
@@ -128,17 +129,18 @@ class TestPlaceholderResponses:
     async def test_placeholder_includes_tool_name(self):
         """Test that placeholder response includes the tool name."""
         server = SecureVibesMCPServer()
-        result = await server.call_tool("run_assessment", {"path": "/tmp/test"})
+        # Use run_threat_modeling which is still a placeholder
+        result = await server.call_tool("run_threat_modeling", {"path": "/tmp/test"})
 
-        assert result["tool"] == "run_assessment"
-        assert "run_assessment" in result["message"]
+        assert result["tool"] == "run_threat_modeling"
+        assert "run_threat_modeling" in result["message"]
 
     @pytest.mark.asyncio
-    async def test_all_agent_tools_return_placeholder(self):
-        """Test that all agent tools return placeholder responses."""
+    async def test_unimplemented_agent_tools_return_placeholder(self):
+        """Test that unimplemented agent tools return placeholder responses."""
         server = SecureVibesMCPServer()
+        # run_assessment is now implemented, so exclude it
         agent_tools = [
-            ("run_assessment", {"path": "/tmp"}),
             ("run_threat_modeling", {"path": "/tmp"}),
             ("run_code_review", {"path": "/tmp"}),
             ("run_dast", {"path": "/tmp", "target_url": "http://localhost"}),

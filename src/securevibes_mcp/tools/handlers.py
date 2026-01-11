@@ -3,6 +3,8 @@
 from pathlib import Path
 from typing import Any
 
+from securevibes_mcp.agents.generator import SecurityDocGenerator
+from securevibes_mcp.agents.scanner import CodebaseScanner
 from securevibes_mcp.storage import ScanStateManager
 from securevibes_mcp.storage.manager import VALID_ARTIFACTS
 
@@ -107,4 +109,60 @@ async def get_artifact(
         "content": content,
         "size": len(content),
         "path": path,
+    }
+
+
+async def run_assessment(
+    path: str,
+    force: bool = False,
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    """Run security assessment on a codebase.
+
+    Scans the codebase, generates SECURITY.md, and stores it as an artifact.
+
+    Args:
+        path: Absolute path to the codebase.
+        force: If True, overwrite existing SECURITY.md artifact.
+
+    Returns:
+        Dictionary with assessment summary or error.
+    """
+    # Validate path
+    error = _validate_path(path)
+    if error:
+        return error
+
+    project_path = Path(path)
+    manager = ScanStateManager(project_path)
+
+    # Check if artifact already exists
+    if not force and manager.artifact_exists("SECURITY.md"):
+        return {
+            "error": False,
+            "skipped": True,
+            "message": "SECURITY.md already exists. Use force=True to overwrite.",
+            "path": path,
+        }
+
+    # Scan the codebase
+    scanner = CodebaseScanner(project_path)
+    scan_result = scanner.scan()
+
+    # Generate SECURITY.md
+    generator = SecurityDocGenerator(scan_result)
+    security_doc = generator.generate()
+
+    # Store the artifact
+    manager.write_artifact("SECURITY.md", security_doc)
+
+    return {
+        "error": False,
+        "path": path,
+        "file_count": scan_result.file_count,
+        "languages": scan_result.languages,
+        "language_stats": scan_result.language_stats,
+        "frameworks": scan_result.frameworks,
+        "artifact": "SECURITY.md",
+        "artifact_size": len(security_doc),
     }
