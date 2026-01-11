@@ -116,10 +116,10 @@
   - [x] Sub-task: Test tool registration and invocation via MCP protocol
   - [x] Sub-task: Verify artifact persistence across tool calls
 
-- [~] Task 6.2: Documentation and final checks
-  - [ ] Sub-task: Add docstrings to all public APIs
-  - [ ] Sub-task: Verify >80% test coverage
-  - [ ] Sub-task: Run final Ruff check and format
-  - [ ] Sub-task: Update CLAUDE.md with implementation details
+- [x] Task 6.2: Documentation and final checks `553e744`
+  - [x] Sub-task: Add docstrings to all public APIs
+  - [x] Sub-task: Verify >80% test coverage
+  - [x] Sub-task: Run final Ruff check and format
+  - [x] Sub-task: Update CLAUDE.md with implementation details
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 6: Integration and Polish' (Protocol in workflow.md)
