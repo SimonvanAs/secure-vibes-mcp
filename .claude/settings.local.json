@@ -17,7 +17,9 @@
       "Bash(uv run ruff:*)",
       "Bash(CI=true uv run pytest:*)",
       "Bash(source ~/.zshrc)",
-      "Bash(source ~/.bashrc)"
+      "Bash(source ~/.bashrc)",
+      "Bash(/Users/slompies/.local/bin/uv run pytest:*)",
+      "Bash(/Users/slompies/.local/bin/uv run ruff check:*)"
     ]
   }
 }
