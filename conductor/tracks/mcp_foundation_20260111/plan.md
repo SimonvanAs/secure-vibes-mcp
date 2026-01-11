@@ -22,7 +22,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Infrastructure' (Protocol in workflow.md)
 
-## Phase 2: MCP Server Core
+## Phase 2: MCP Server Core [checkpoint: 4e22bf4]
 
 - [x] Task 2.1: Implement MCP server initialization `80424ea`
   - [x] Sub-task: Write tests for server creation and lifecycle
@@ -41,7 +41,7 @@
   - [x] Sub-task: Implement placeholder handlers for unimplemented tools
   - [x] Sub-task: Return structured "not implemented" responses with tool name
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: MCP Server Core' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: MCP Server Core' (Protocol in workflow.md)
 
 ## Phase 3: Artifact Storage Layer
 
