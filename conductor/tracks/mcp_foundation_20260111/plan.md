@@ -45,7 +45,7 @@
 
 ## Phase 3: Artifact Storage Layer
 
-- [ ] Task 3.1: Implement storage manager
+- [~] Task 3.1: Implement storage manager
   - [ ] Sub-task: Write tests for directory creation and file operations
   - [ ] Sub-task: Create `ScanStateManager` class
   - [ ] Sub-task: Implement `.securevibes/` directory initialization
