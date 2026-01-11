@@ -24,11 +24,11 @@
 
 ## Phase 2: MCP Server Core
 
-- [ ] Task 2.1: Implement MCP server initialization
-  - [ ] Sub-task: Write tests for server creation and lifecycle
-  - [ ] Sub-task: Implement `SecureVibesMCPServer` class with MCP SDK
-  - [ ] Sub-task: Add async context manager for server lifecycle
-  - [ ] Sub-task: Implement environment variable configuration loading
+- [x] Task 2.1: Implement MCP server initialization `80424ea`
+  - [x] Sub-task: Write tests for server creation and lifecycle
+  - [x] Sub-task: Implement `SecureVibesMCPServer` class with MCP SDK
+  - [x] Sub-task: Add async context manager for server lifecycle
+  - [x] Sub-task: Implement environment variable configuration loading
 
 - [ ] Task 2.2: Implement tool registration framework
   - [ ] Sub-task: Write tests for tool listing and schema validation
