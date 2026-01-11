@@ -2,11 +2,11 @@
 
 ## Phase 1: Project Setup and Infrastructure
 
-- [ ] Task 1.1: Initialize Python project with uv
-  - [ ] Sub-task: Create pyproject.toml with project metadata and dependencies
-  - [ ] Sub-task: Add dependencies (mcp, anthropic, pytest, pytest-asyncio, pytest-cov, ruff)
-  - [ ] Sub-task: Run `uv sync` to create virtual environment and lockfile
-  - [ ] Sub-task: Verify project structure matches tech-stack.md
+- [x] Task 1.1: Initialize Python project with uv `e8f6c2c`
+  - [x] Sub-task: Create pyproject.toml with project metadata and dependencies
+  - [x] Sub-task: Add dependencies (mcp, anthropic, pytest, pytest-asyncio, pytest-cov, ruff)
+  - [x] Sub-task: Run `uv sync` to create virtual environment and lockfile
+  - [x] Sub-task: Verify project structure matches tech-stack.md
 
 - [ ] Task 1.2: Create package structure
   - [ ] Sub-task: Write tests for package importability
