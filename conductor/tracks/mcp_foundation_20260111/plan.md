@@ -14,11 +14,11 @@
   - [x] Sub-task: Create `src/securevibes_mcp/server.py` skeleton
   - [x] Sub-task: Create `src/securevibes_mcp/__main__.py` for CLI entry point
 
-- [ ] Task 1.3: Configure development tools
-  - [ ] Sub-task: Add Ruff configuration to pyproject.toml
-  - [ ] Sub-task: Add pytest configuration to pyproject.toml
-  - [ ] Sub-task: Create `tests/conftest.py` with shared fixtures
-  - [ ] Sub-task: Verify `uv run ruff check .` and `uv run pytest` work
+- [x] Task 1.3: Configure development tools `95a4fc6`
+  - [x] Sub-task: Add Ruff configuration to pyproject.toml
+  - [x] Sub-task: Add pytest configuration to pyproject.toml
+  - [x] Sub-task: Create `tests/conftest.py` with shared fixtures
+  - [x] Sub-task: Verify `uv run ruff check .` and `uv run pytest` work
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Project Setup and Infrastructure' (Protocol in workflow.md)
 
