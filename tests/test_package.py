@@ -37,3 +37,27 @@ def test_main_module_exists():
     """Test that __main__.py exists and can be imported."""
     spec = importlib.util.find_spec("securevibes_mcp.__main__")
     assert spec is not None, "__main__.py module should exist"
+
+
+def test_main_function_exists():
+    """Test that main function exists in __main__ module."""
+    from securevibes_mcp.__main__ import main
+
+    assert callable(main)
+
+
+def test_server_initialization():
+    """Test that SecureVibesMCPServer can be instantiated."""
+    from securevibes_mcp.server import SecureVibesMCPServer
+
+    server = SecureVibesMCPServer()
+    assert server.name == "securevibes"
+    assert server.server is not None
+
+
+def test_server_custom_name():
+    """Test that SecureVibesMCPServer accepts custom name."""
+    from securevibes_mcp.server import SecureVibesMCPServer
+
+    server = SecureVibesMCPServer(name="custom")
+    assert server.name == "custom"
