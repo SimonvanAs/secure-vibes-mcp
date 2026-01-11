@@ -149,3 +149,70 @@ class TestGetArtifactTool:
         assert result["artifact_name"] == "SECURITY.md"
         assert "size" in result
         assert "path" in result
+
+
+class TestPathValidation:
+    """Tests for path validation in query tools."""
+
+    @pytest.mark.asyncio
+    async def test_get_scan_status_invalid_path(self):
+        """Test get_scan_status with non-existent path."""
+        from securevibes_mcp.tools.handlers import get_scan_status
+
+        result = await get_scan_status(path="/nonexistent/path/to/project")
+
+        assert result["error"] is True
+        assert result["code"] == "PATH_NOT_FOUND"
+        assert "/nonexistent/path/to/project" in result["message"]
+
+    @pytest.mark.asyncio
+    async def test_get_artifact_invalid_path(self):
+        """Test get_artifact with non-existent path."""
+        from securevibes_mcp.tools.handlers import get_artifact
+
+        result = await get_artifact(
+            path="/nonexistent/path/to/project",
+            artifact_name="SECURITY.md",
+        )
+
+        assert result["error"] is True
+        assert result["code"] == "PATH_NOT_FOUND"
+
+    @pytest.mark.asyncio
+    async def test_get_scan_status_file_not_directory(self, tmp_path: Path):
+        """Test get_scan_status when path is a file, not directory."""
+        from securevibes_mcp.tools.handlers import get_scan_status
+
+        # Create a file instead of using a directory
+        file_path = tmp_path / "somefile.txt"
+        file_path.write_text("content")
+
+        result = await get_scan_status(path=str(file_path))
+
+        assert result["error"] is True
+        assert result["code"] == "PATH_NOT_DIRECTORY"
+
+    @pytest.mark.asyncio
+    async def test_get_artifact_file_not_directory(self, tmp_path: Path):
+        """Test get_artifact when path is a file, not directory."""
+        from securevibes_mcp.tools.handlers import get_artifact
+
+        # Create a file instead of using a directory
+        file_path = tmp_path / "somefile.txt"
+        file_path.write_text("content")
+
+        result = await get_artifact(
+            path=str(file_path), artifact_name="SECURITY.md"
+        )
+
+        assert result["error"] is True
+        assert result["code"] == "PATH_NOT_DIRECTORY"
+
+    @pytest.mark.asyncio
+    async def test_valid_path_succeeds(self, tmp_path: Path):
+        """Test that valid paths work correctly."""
+        from securevibes_mcp.tools.handlers import get_scan_status
+
+        result = await get_scan_status(path=str(tmp_path))
+
+        assert result["error"] is False

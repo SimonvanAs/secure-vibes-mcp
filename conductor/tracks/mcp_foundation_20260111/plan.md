@@ -75,7 +75,7 @@
   - [x] Sub-task: Implement tool handler with artifact name validation
   - [x] Sub-task: Return raw artifact content with metadata
 
-- [ ] Task 4.3: Add path validation
+- [~] Task 4.3: Add path validation
   - [ ] Sub-task: Write tests for invalid path handling
   - [ ] Sub-task: Validate target path exists before operations
   - [ ] Sub-task: Return clear error for non-existent paths

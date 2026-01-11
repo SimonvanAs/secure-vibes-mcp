@@ -7,6 +7,36 @@ from securevibes_mcp.storage import ScanStateManager
 from securevibes_mcp.storage.manager import VALID_ARTIFACTS
 
 
+def _validate_path(path: str) -> dict[str, Any] | None:
+    """Validate that a path exists and is a directory.
+
+    Args:
+        path: Path to validate.
+
+    Returns:
+        Error dict if validation fails, None if valid.
+    """
+    project_path = Path(path)
+
+    if not project_path.exists():
+        return {
+            "error": True,
+            "code": "PATH_NOT_FOUND",
+            "message": f"Path does not exist: {path}",
+            "path": path,
+        }
+
+    if not project_path.is_dir():
+        return {
+            "error": True,
+            "code": "PATH_NOT_DIRECTORY",
+            "message": f"Path is not a directory: {path}",
+            "path": path,
+        }
+
+    return None
+
+
 async def get_scan_status(path: str, **_kwargs: Any) -> dict[str, Any]:
     """Get the status of all security scan artifacts.
 
@@ -16,6 +46,11 @@ async def get_scan_status(path: str, **_kwargs: Any) -> dict[str, Any]:
     Returns:
         Dictionary with artifact statuses.
     """
+    # Validate path
+    error = _validate_path(path)
+    if error:
+        return error
+
     project_path = Path(path)
     manager = ScanStateManager(project_path)
     status = manager.get_status()
@@ -39,6 +74,11 @@ async def get_artifact(
     Returns:
         Dictionary with artifact content or error.
     """
+    # Validate path
+    error = _validate_path(path)
+    if error:
+        return error
+
     # Validate artifact name
     if artifact_name not in VALID_ARTIFACTS:
         return {
