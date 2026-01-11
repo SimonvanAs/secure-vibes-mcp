@@ -2,9 +2,11 @@
 
 import os
 from dataclasses import dataclass
-from typing import Self
+from typing import Any, Self
 
 from mcp.server import Server
+
+from securevibes_mcp.tools.registry import Tool, get_tool_registry
 
 VALID_MODELS = {"haiku", "sonnet", "opus"}
 DEFAULT_MODEL = "sonnet"
@@ -50,6 +52,7 @@ class SecureVibesMCPServer:
         self.name = name
         self.server = Server(name)
         self.config = ServerConfig.from_environment()
+        self._registry = get_tool_registry()
 
     async def __aenter__(self) -> Self:
         """Enter async context manager.
@@ -69,6 +72,42 @@ class SecureVibesMCPServer:
         """
         # Cleanup will be added when we implement actual server logic
         pass
+
+    def list_tools(self) -> list[Tool]:
+        """List all registered MCP tools.
+
+        Returns:
+            List of all registered tools.
+        """
+        return self._registry.list_tools()
+
+    async def call_tool(
+        self, name: str, arguments: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Call a registered tool by name.
+
+        Args:
+            name: The name of the tool to call.
+            arguments: The arguments to pass to the tool.
+
+        Returns:
+            The tool's response.
+
+        Raises:
+            ValueError: If the tool is not found or required arguments are missing.
+        """
+        tool = self._registry.get_tool(name)
+        if tool is None:
+            raise ValueError(f"Unknown tool: {name}")
+
+        # Validate required arguments
+        schema = tool.inputSchema
+        required = schema.get("required", [])
+        for req_arg in required:
+            if req_arg not in arguments:
+                raise ValueError(f"Missing required argument: {req_arg}")
+
+        return await tool.handler(**arguments)
 
     async def run(self) -> None:
         """Run the MCP server."""

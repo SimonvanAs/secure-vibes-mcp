@@ -1,0 +1,112 @@
+"""Tests for MCP tool registration and dispatch."""
+
+import pytest
+
+from securevibes_mcp.server import SecureVibesMCPServer
+
+# Expected tools based on spec
+EXPECTED_TOOLS = [
+    "run_assessment",
+    "run_threat_modeling",
+    "run_code_review",
+    "run_dast",
+    "generate_report",
+    "get_scan_status",
+    "get_artifact",
+    "get_vulnerabilities",
+]
+
+
+class TestToolRegistration:
+    """Tests for tool registration."""
+
+    def test_server_has_tools_registered(self):
+        """Test that server has tools registered."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        assert len(tools) == 8
+
+    def test_all_expected_tools_registered(self):
+        """Test that all expected tools are registered."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        tool_names = [t.name for t in tools]
+        for expected in EXPECTED_TOOLS:
+            assert expected in tool_names, f"Tool {expected} not registered"
+
+    def test_tools_have_descriptions(self):
+        """Test that all tools have descriptions."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        for tool in tools:
+            assert tool.description, f"Tool {tool.name} has no description"
+
+    def test_tools_have_input_schemas(self):
+        """Test that all tools have input schemas."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        for tool in tools:
+            assert tool.inputSchema is not None, f"Tool {tool.name} has no input schema"
+
+
+class TestToolSchemas:
+    """Tests for tool input schemas."""
+
+    def test_run_assessment_schema(self):
+        """Test run_assessment has correct schema."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        tool = next(t for t in tools if t.name == "run_assessment")
+
+        schema = tool.inputSchema
+        assert "properties" in schema
+        assert "path" in schema["properties"]
+        assert schema["properties"]["path"]["type"] == "string"
+        assert "path" in schema.get("required", [])
+
+    def test_get_scan_status_schema(self):
+        """Test get_scan_status has correct schema."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        tool = next(t for t in tools if t.name == "get_scan_status")
+
+        schema = tool.inputSchema
+        assert "properties" in schema
+        assert "path" in schema["properties"]
+
+    def test_get_artifact_schema(self):
+        """Test get_artifact has correct schema."""
+        server = SecureVibesMCPServer()
+        tools = server.list_tools()
+        tool = next(t for t in tools if t.name == "get_artifact")
+
+        schema = tool.inputSchema
+        assert "properties" in schema
+        assert "path" in schema["properties"]
+        assert "artifact_name" in schema["properties"]
+
+
+class TestToolDispatch:
+    """Tests for tool dispatch mechanism."""
+
+    @pytest.mark.asyncio
+    async def test_call_tool_returns_result(self):
+        """Test that calling a tool returns a result."""
+        server = SecureVibesMCPServer()
+        result = await server.call_tool("get_scan_status", {"path": "/tmp/test"})
+        assert result is not None
+
+    @pytest.mark.asyncio
+    async def test_call_unknown_tool_raises_error(self):
+        """Test that calling unknown tool raises error."""
+        server = SecureVibesMCPServer()
+        with pytest.raises(ValueError, match="Unknown tool"):
+            await server.call_tool("unknown_tool", {})
+
+    @pytest.mark.asyncio
+    async def test_call_tool_validates_arguments(self):
+        """Test that tool call validates required arguments."""
+        server = SecureVibesMCPServer()
+        # run_assessment requires path
+        with pytest.raises((ValueError, TypeError)):
+            await server.call_tool("run_assessment", {})
