@@ -75,10 +75,10 @@
   - [x] Sub-task: Implement tool handler with artifact name validation
   - [x] Sub-task: Return raw artifact content with metadata
 
-- [~] Task 4.3: Add path validation
-  - [ ] Sub-task: Write tests for invalid path handling
-  - [ ] Sub-task: Validate target path exists before operations
-  - [ ] Sub-task: Return clear error for non-existent paths
+- [x] Task 4.3: Add path validation `081d4c6`
+  - [x] Sub-task: Write tests for invalid path handling
+  - [x] Sub-task: Validate target path exists before operations
+  - [x] Sub-task: Return clear error for non-existent paths
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Query Tools Implementation' (Protocol in workflow.md)
 
