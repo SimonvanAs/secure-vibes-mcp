@@ -109,7 +109,7 @@
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 5: Assessment Agent Implementation' (Protocol in workflow.md)
 
-## Phase 6: Integration and Polish
+## Phase 6: Integration and Polish [checkpoint: e2a4571]
 
 - [x] Task 6.1: End-to-end integration testing `8314b24`
   - [x] Sub-task: Write E2E test for complete assessment workflow
