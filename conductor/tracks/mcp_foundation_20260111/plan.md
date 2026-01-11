@@ -65,15 +65,15 @@
 
 ## Phase 4: Query Tools Implementation
 
-- [~] Task 4.1: Implement get_scan_status tool
-  - [ ] Sub-task: Write tests for status retrieval with various artifact states
-  - [ ] Sub-task: Implement tool handler using ScanStateManager
-  - [ ] Sub-task: Return structured response with all artifact metadata
+- [x] Task 4.1: Implement get_scan_status tool `ccea17e`
+  - [x] Sub-task: Write tests for status retrieval with various artifact states
+  - [x] Sub-task: Implement tool handler using ScanStateManager
+  - [x] Sub-task: Return structured response with all artifact metadata
 
-- [ ] Task 4.2: Implement get_artifact tool
-  - [ ] Sub-task: Write tests for artifact retrieval (existing and missing)
-  - [ ] Sub-task: Implement tool handler with artifact name validation
-  - [ ] Sub-task: Return raw artifact content with metadata
+- [x] Task 4.2: Implement get_artifact tool `ccea17e`
+  - [x] Sub-task: Write tests for artifact retrieval (existing and missing)
+  - [x] Sub-task: Implement tool handler with artifact name validation
+  - [x] Sub-task: Return raw artifact content with metadata
 
 - [ ] Task 4.3: Add path validation
   - [ ] Sub-task: Write tests for invalid path handling
