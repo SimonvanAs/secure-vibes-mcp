@@ -82,7 +82,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Query Tools Implementation' (Protocol in workflow.md)
 
-## Phase 5: Assessment Agent Implementation
+## Phase 5: Assessment Agent Implementation [checkpoint: 25f5e26]
 
 - [x] Task 5.1: Implement codebase scanning `5f8b26f`
   - [x] Sub-task: Write tests for language and framework detection
