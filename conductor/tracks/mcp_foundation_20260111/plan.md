@@ -63,7 +63,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Artifact Storage Layer' (Protocol in workflow.md)
 
-## Phase 4: Query Tools Implementation
+## Phase 4: Query Tools Implementation [checkpoint: 10ef131]
 
 - [x] Task 4.1: Implement get_scan_status tool `ccea17e`
   - [x] Sub-task: Write tests for status retrieval with various artifact states
@@ -80,7 +80,7 @@
   - [x] Sub-task: Validate target path exists before operations
   - [x] Sub-task: Return clear error for non-existent paths
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Query Tools Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Query Tools Implementation' (Protocol in workflow.md)
 
 ## Phase 5: Assessment Agent Implementation
 
