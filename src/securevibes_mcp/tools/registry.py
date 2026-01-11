@@ -4,6 +4,8 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
 from typing import Any
 
+from securevibes_mcp.tools.handlers import get_artifact, get_scan_status
+
 
 @dataclass
 class Tool:
@@ -307,7 +309,7 @@ def get_tool_registry() -> ToolRegistry:
             name="get_scan_status",
             description="Retrieves current state of security artifacts",
             inputSchema=SCAN_STATUS_SCHEMA,
-            handler=lambda **kw: not_implemented("get_scan_status", **kw),
+            handler=get_scan_status,
         )
     )
 
@@ -316,7 +318,7 @@ def get_tool_registry() -> ToolRegistry:
             name="get_artifact",
             description="Retrieves raw artifact content",
             inputSchema=GET_ARTIFACT_SCHEMA,
-            handler=lambda **kw: not_implemented("get_artifact", **kw),
+            handler=get_artifact,
         )
     )
 

@@ -65,7 +65,7 @@
 
 ## Phase 4: Query Tools Implementation
 
-- [ ] Task 4.1: Implement get_scan_status tool
+- [~] Task 4.1: Implement get_scan_status tool
   - [ ] Sub-task: Write tests for status retrieval with various artifact states
   - [ ] Sub-task: Implement tool handler using ScanStateManager
   - [ ] Sub-task: Return structured response with all artifact metadata

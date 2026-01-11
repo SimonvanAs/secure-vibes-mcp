@@ -152,12 +152,11 @@ class TestPlaceholderResponses:
             assert result["tool"] == tool_name
 
     @pytest.mark.asyncio
-    async def test_all_query_tools_return_placeholder(self):
-        """Test that all query tools return placeholder responses."""
+    async def test_unimplemented_query_tools_return_placeholder(self):
+        """Test that unimplemented query tools return placeholder responses."""
         server = SecureVibesMCPServer()
+        # Only get_vulnerabilities is still a placeholder
         query_tools = [
-            ("get_scan_status", {"path": "/tmp"}),
-            ("get_artifact", {"path": "/tmp", "artifact_name": "SECURITY.md"}),
             ("get_vulnerabilities", {"path": "/tmp"}),
         ]
 
@@ -171,7 +170,8 @@ class TestPlaceholderResponses:
     async def test_placeholder_response_structure(self):
         """Test that placeholder response has required fields."""
         server = SecureVibesMCPServer()
-        result = await server.call_tool("get_scan_status", {"path": "/tmp"})
+        # Use get_vulnerabilities which is still a placeholder
+        result = await server.call_tool("get_vulnerabilities", {"path": "/tmp"})
 
         # Verify all required fields are present
         assert "error" in result
