@@ -84,7 +84,7 @@
 
 ## Phase 5: Assessment Agent Implementation
 
-- [ ] Task 5.1: Implement codebase scanning
+- [~] Task 5.1: Implement codebase scanning
   - [ ] Sub-task: Write tests for language and framework detection
   - [ ] Sub-task: Create file tree walker respecting .gitignore
   - [ ] Sub-task: Implement language detection from file extensions
