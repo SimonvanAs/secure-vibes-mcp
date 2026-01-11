@@ -102,10 +102,10 @@
   - [x] Sub-task: Store artifact via ScanStateManager
   - [x] Sub-task: Return summary with languages, file count, and components
 
-- [ ] Task 5.4: Add dependency validation
-  - [ ] Sub-task: Write tests for dependency checking
-  - [ ] Sub-task: Implement `DependencyValidator` class
-  - [ ] Sub-task: Validate no prerequisites for assessment (entry point)
+- [x] Task 5.4: Add dependency validation `86802a4`
+  - [x] Sub-task: Write tests for dependency checking
+  - [x] Sub-task: Implement `DependencyValidator` class
+  - [x] Sub-task: Validate no prerequisites for assessment (entry point)
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 5: Assessment Agent Implementation' (Protocol in workflow.md)
 
