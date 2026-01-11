@@ -107,7 +107,7 @@
   - [x] Sub-task: Implement `DependencyValidator` class
   - [x] Sub-task: Validate no prerequisites for assessment (entry point)
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 5: Assessment Agent Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 5: Assessment Agent Implementation' (Protocol in workflow.md)
 
 ## Phase 6: Integration and Polish [checkpoint: e2a4571]
 
@@ -122,4 +122,4 @@
   - [x] Sub-task: Run final Ruff check and format
   - [x] Sub-task: Update CLAUDE.md with implementation details
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 6: Integration and Polish' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 6: Integration and Polish' (Protocol in workflow.md)
