@@ -51,10 +51,10 @@
   - [x] Sub-task: Implement `.securevibes/` directory initialization
   - [x] Sub-task: Implement artifact read/write operations
 
-- [~] Task 3.2: Implement artifact status checking
-  - [ ] Sub-task: Write tests for status reporting
-  - [ ] Sub-task: Implement `get_status()` method returning all artifact states
-  - [ ] Sub-task: Include existence, modification time, and size for each artifact
+- [x] Task 3.2: Implement artifact status checking `81c13a9`
+  - [x] Sub-task: Write tests for status reporting
+  - [x] Sub-task: Implement `get_status()` method returning all artifact states
+  - [x] Sub-task: Include existence, modification time, and size for each artifact
 
 - [ ] Task 3.3: Implement error handling for storage operations
   - [ ] Sub-task: Write tests for error scenarios (permission denied, disk full, etc.)
