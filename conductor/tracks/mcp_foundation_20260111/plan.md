@@ -56,10 +56,10 @@
   - [x] Sub-task: Implement `get_status()` method returning all artifact states
   - [x] Sub-task: Include existence, modification time, and size for each artifact
 
-- [~] Task 3.3: Implement error handling for storage operations
-  - [ ] Sub-task: Write tests for error scenarios (permission denied, disk full, etc.)
-  - [ ] Sub-task: Create structured error response format
-  - [ ] Sub-task: Handle file system errors gracefully
+- [x] Task 3.3: Implement error handling for storage operations `a94ef17`
+  - [x] Sub-task: Write tests for error scenarios (permission denied, disk full, etc.)
+  - [x] Sub-task: Create structured error response format
+  - [x] Sub-task: Handle file system errors gracefully
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Artifact Storage Layer' (Protocol in workflow.md)
 
