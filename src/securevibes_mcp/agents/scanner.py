@@ -6,25 +6,27 @@ from pathlib import Path
 from typing import Any
 
 # Directories to always ignore during scanning
-IGNORED_DIRS = frozenset({
-    ".git",
-    ".hg",
-    ".svn",
-    "__pycache__",
-    ".pytest_cache",
-    ".mypy_cache",
-    ".ruff_cache",
-    "node_modules",
-    ".venv",
-    "venv",
-    ".env",
-    "env",
-    ".tox",
-    "dist",
-    "build",
-    ".eggs",
-    "*.egg-info",
-})
+IGNORED_DIRS = frozenset(
+    {
+        ".git",
+        ".hg",
+        ".svn",
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        "node_modules",
+        ".venv",
+        "venv",
+        ".env",
+        "env",
+        ".tox",
+        "dist",
+        "build",
+        ".eggs",
+        "*.egg-info",
+    }
+)
 
 # Language detection by file extension
 LANGUAGE_EXTENSIONS: dict[str, str] = {
@@ -182,7 +184,11 @@ class CodebaseScanner:
                         return True
 
         # Check against .gitignore patterns
-        rel_path = path.relative_to(self.root_path) if path.is_relative_to(self.root_path) else path
+        rel_path = (
+            path.relative_to(self.root_path)
+            if path.is_relative_to(self.root_path)
+            else path
+        )
 
         for pattern in self._gitignore_patterns:
             # Handle directory patterns (ending with /)

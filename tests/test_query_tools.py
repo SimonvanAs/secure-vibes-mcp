@@ -101,9 +101,7 @@ class TestGetArtifactTool:
         manager = ScanStateManager(tmp_path)
         manager.write_artifact("SECURITY.md", "# Security Analysis")
 
-        result = await get_artifact(
-            path=str(tmp_path), artifact_name="SECURITY.md"
-        )
+        result = await get_artifact(path=str(tmp_path), artifact_name="SECURITY.md")
 
         assert result["error"] is False
         assert result["content"] == "# Security Analysis"
@@ -113,9 +111,7 @@ class TestGetArtifactTool:
         """Test get_artifact when artifact doesn't exist."""
         from securevibes_mcp.tools.handlers import get_artifact
 
-        result = await get_artifact(
-            path=str(tmp_path), artifact_name="SECURITY.md"
-        )
+        result = await get_artifact(path=str(tmp_path), artifact_name="SECURITY.md")
 
         assert result["error"] is True
         assert result["code"] == "ARTIFACT_NOT_FOUND"
@@ -125,9 +121,7 @@ class TestGetArtifactTool:
         """Test get_artifact with invalid artifact name."""
         from securevibes_mcp.tools.handlers import get_artifact
 
-        result = await get_artifact(
-            path=str(tmp_path), artifact_name="INVALID.txt"
-        )
+        result = await get_artifact(path=str(tmp_path), artifact_name="INVALID.txt")
 
         assert result["error"] is True
         assert result["code"] == "INVALID_ARTIFACT_NAME"
@@ -141,9 +135,7 @@ class TestGetArtifactTool:
         manager = ScanStateManager(tmp_path)
         manager.write_artifact("SECURITY.md", "content")
 
-        result = await get_artifact(
-            path=str(tmp_path), artifact_name="SECURITY.md"
-        )
+        result = await get_artifact(path=str(tmp_path), artifact_name="SECURITY.md")
 
         assert "artifact_name" in result
         assert result["artifact_name"] == "SECURITY.md"
@@ -201,9 +193,7 @@ class TestPathValidation:
         file_path = tmp_path / "somefile.txt"
         file_path.write_text("content")
 
-        result = await get_artifact(
-            path=str(file_path), artifact_name="SECURITY.md"
-        )
+        result = await get_artifact(path=str(file_path), artifact_name="SECURITY.md")
 
         assert result["error"] is True
         assert result["code"] == "PATH_NOT_DIRECTORY"

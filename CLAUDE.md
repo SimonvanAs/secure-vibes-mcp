@@ -29,32 +29,47 @@ Each agent depends on artifacts from the previous stage:
 - `report-generator`: Requires `VULNERABILITIES.json`
 
 ### Key Classes
-- `SecureVibesMCPServer`: Main MCP server with tool handlers
-- `DependencyValidator`: Validates artifact dependencies before agent execution
-- `ScanStateManager`: Manages artifact state and caching in `.securevibes/`
+- `SecureVibesMCPServer`: Main MCP server with tool handlers (`src/securevibes_mcp/server.py`)
+- `ToolRegistry`: Manages tool registration and dispatch (`src/securevibes_mcp/tools/registry.py`)
+- `DependencyValidator`: Validates artifact dependencies before agent execution (`src/securevibes_mcp/agents/dependency.py`)
+- `ScanStateManager`: Manages artifact state and caching in `.securevibes/` (`src/securevibes_mcp/storage/manager.py`)
+- `CodebaseScanner`: Scans codebase for languages, frameworks, and file structure (`src/securevibes_mcp/agents/scanner.py`)
+- `SecurityDocGenerator`: Generates SECURITY.md from scan results (`src/securevibes_mcp/agents/generator.py`)
 
 ## MCP Tools
 
 **Core Agent Tools:**
-- `run_assessment` - Analyzes codebase architecture, creates `SECURITY.md`
-- `run_threat_modeling` - STRIDE analysis, creates `THREAT_MODEL.json`
-- `run_code_review` - Validates threats, creates `VULNERABILITIES.json`
-- `run_dast` - Dynamic testing against running app, creates `DAST_VALIDATION.json`
-- `generate_report` - Compiles findings into `scan_results.json` and `scan_report.md`
+- `run_assessment` - Analyzes codebase architecture, creates `SECURITY.md` **(Implemented)**
+- `run_threat_modeling` - STRIDE analysis, creates `THREAT_MODEL.json` *(Placeholder)*
+- `run_code_review` - Validates threats, creates `VULNERABILITIES.json` *(Placeholder)*
+- `run_dast` - Dynamic testing against running app, creates `DAST_VALIDATION.json` *(Placeholder)*
+- `generate_report` - Compiles findings into `scan_results.json` and `scan_report.md` *(Placeholder)*
 
 **Query Tools:**
-- `get_scan_status` - Returns state of all artifacts
-- `get_vulnerabilities` - Filtered vulnerability retrieval
-- `get_artifact` - Raw artifact content access
+- `get_scan_status` - Returns state of all artifacts **(Implemented)**
+- `get_vulnerabilities` - Filtered vulnerability retrieval *(Placeholder)*
+- `get_artifact` - Raw artifact content access **(Implemented)**
 
 ## Build & Run Commands
 
 ```bash
-# Install dependencies
-pip install securevibes-mcp
+# Install dependencies (using uv)
+uv sync
 
 # Run the MCP server
-python -m securevibes_mcp
+uv run python -m securevibes_mcp
+
+# Run tests
+uv run pytest
+
+# Run tests with coverage
+uv run pytest --cov=securevibes_mcp --cov-report=html
+
+# Lint code
+uv run ruff check .
+
+# Format code
+uv run ruff format .
 ```
 
 ## Configuration

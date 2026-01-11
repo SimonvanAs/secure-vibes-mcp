@@ -460,9 +460,7 @@ class TestStorageErrors:
         """Test that StorageError can include a path."""
         from securevibes_mcp.storage import StorageError
 
-        error = StorageError(
-            "test message", code="TEST_ERROR", path="/some/path"
-        )
+        error = StorageError("test message", code="TEST_ERROR", path="/some/path")
         assert error.path == "/some/path"
         error_dict = error.to_dict()
         assert error_dict["path"] == "/some/path"

@@ -111,12 +111,12 @@
 
 ## Phase 6: Integration and Polish
 
-- [~] Task 6.1: End-to-end integration testing
-  - [ ] Sub-task: Write E2E test for complete assessment workflow
-  - [ ] Sub-task: Test tool registration and invocation via MCP protocol
-  - [ ] Sub-task: Verify artifact persistence across tool calls
+- [x] Task 6.1: End-to-end integration testing `8314b24`
+  - [x] Sub-task: Write E2E test for complete assessment workflow
+  - [x] Sub-task: Test tool registration and invocation via MCP protocol
+  - [x] Sub-task: Verify artifact persistence across tool calls
 
-- [ ] Task 6.2: Documentation and final checks
+- [~] Task 6.2: Documentation and final checks
   - [ ] Sub-task: Add docstrings to all public APIs
   - [ ] Sub-task: Verify >80% test coverage
   - [ ] Sub-task: Run final Ruff check and format

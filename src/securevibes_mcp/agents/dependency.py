@@ -87,7 +87,9 @@ class DependencyValidator:
         """
         required = self.get_dependencies(tool_name)
         missing = [
-            artifact for artifact in required if not self.manager.artifact_exists(artifact)
+            artifact
+            for artifact in required
+            if not self.manager.artifact_exists(artifact)
         ]
 
         return ValidationResult(

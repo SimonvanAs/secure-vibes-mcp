@@ -81,9 +81,7 @@ class SecureVibesMCPServer:
         """
         return self._registry.list_tools()
 
-    async def call_tool(
-        self, name: str, arguments: dict[str, Any]
-    ) -> dict[str, Any]:
+    async def call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Call a registered tool by name.
 
         Args:

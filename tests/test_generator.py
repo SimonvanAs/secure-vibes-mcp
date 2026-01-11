@@ -160,7 +160,9 @@ class TestSecurityObservations:
         doc = generator.generate()
 
         # Should include Flask-specific security considerations
-        assert "session" in doc.lower() or "csrf" in doc.lower() or "flask" in doc.lower()
+        assert (
+            "session" in doc.lower() or "csrf" in doc.lower() or "flask" in doc.lower()
+        )
 
     def test_django_observations(self, tmp_path: Path):
         """Test security observations for Django projects."""
@@ -181,7 +183,9 @@ class TestSecurityObservations:
         from securevibes_mcp.agents.generator import SecurityDocGenerator
         from securevibes_mcp.agents.scanner import CodebaseScanner
 
-        (tmp_path / "package.json").write_text('{"dependencies": {"express": "^4.18.0"}}')
+        (tmp_path / "package.json").write_text(
+            '{"dependencies": {"express": "^4.18.0"}}'
+        )
 
         scanner = CodebaseScanner(tmp_path)
         generator = SecurityDocGenerator(scanner.scan())

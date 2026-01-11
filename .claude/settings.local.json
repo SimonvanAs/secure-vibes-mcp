@@ -19,7 +19,8 @@
       "Bash(source ~/.zshrc)",
       "Bash(source ~/.bashrc)",
       "Bash(/Users/slompies/.local/bin/uv run pytest:*)",
-      "Bash(/Users/slompies/.local/bin/uv run ruff check:*)"
+      "Bash(/Users/slompies/.local/bin/uv run ruff check:*)",
+      "Bash(/Users/slompies/.local/bin/uv run ruff format .)"
     ]
   }
 }

@@ -64,9 +64,7 @@ async def get_scan_status(path: str, **_kwargs: Any) -> dict[str, Any]:
     }
 
 
-async def get_artifact(
-    path: str, artifact_name: str, **_kwargs: Any
-) -> dict[str, Any]:
+async def get_artifact(path: str, artifact_name: str, **_kwargs: Any) -> dict[str, Any]:
     """Get the content of a specific artifact.
 
     Args:

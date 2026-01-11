@@ -189,9 +189,7 @@ class TestFrameworkDetection:
         """Test detection of React from package.json."""
         from securevibes_mcp.agents.scanner import CodebaseScanner
 
-        (tmp_path / "package.json").write_text(
-            '{"dependencies": {"react": "^18.0.0"}}'
-        )
+        (tmp_path / "package.json").write_text('{"dependencies": {"react": "^18.0.0"}}')
 
         scanner = CodebaseScanner(tmp_path)
         result = scanner.scan()

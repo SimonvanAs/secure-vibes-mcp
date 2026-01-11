@@ -18,9 +18,7 @@ class TestAssessmentWorkflowE2E:
         (tmp_path / "src" / "app.py").write_text(
             "from flask import Flask\napp = Flask(__name__)\n"
         )
-        (tmp_path / "src" / "models.py").write_text(
-            "class User:\n    pass\n"
-        )
+        (tmp_path / "src" / "models.py").write_text("class User:\n    pass\n")
         (tmp_path / "requirements.txt").write_text("flask>=2.0.0\nsqlalchemy>=1.4\n")
         (tmp_path / "README.md").write_text("# Test Project\n")
 
@@ -56,7 +54,9 @@ class TestAssessmentWorkflowE2E:
         (tmp_path / "backend.py").write_text("# Python backend\n")
         (tmp_path / "frontend.js").write_text("// JavaScript frontend\n")
         (tmp_path / "styles.css").write_text("/* CSS styles */\n")
-        (tmp_path / "package.json").write_text('{"name": "test", "dependencies": {"react": "^18.0.0"}}\n')
+        (tmp_path / "package.json").write_text(
+            '{"name": "test", "dependencies": {"react": "^18.0.0"}}\n'
+        )
 
         server = SecureVibesMCPServer()
         result = await server.call_tool("run_assessment", {"path": str(tmp_path)})
