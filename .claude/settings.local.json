@@ -21,7 +21,8 @@
       "Bash(/Users/slompies/.local/bin/uv run pytest:*)",
       "Bash(/Users/slompies/.local/bin/uv run ruff check:*)",
       "Bash(/Users/slompies/.local/bin/uv run ruff format .)",
-      "Skill(conductor:new-track)"
+      "Skill(conductor:new-track)",
+      "Bash(/Users/slompies/.local/bin/uv run python:*)"
     ]
   }
 }
