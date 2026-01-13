@@ -62,23 +62,23 @@
 
 ## Phase 4: Vulnerability Output Generator
 
-- [ ] Task 4.1: Implement vulnerability builder
-  - [ ] Sub-task: Write tests for vulnerability structure
-  - [ ] Sub-task: Create `Vulnerability` dataclass with required fields
-  - [ ] Sub-task: Create `VulnerabilityBuilder` class
-  - [ ] Sub-task: Generate unique vulnerability IDs (VULN-NNN)
+- [x] Task 4.1: Implement vulnerability builder `31a0438`
+  - [x] Sub-task: Write tests for vulnerability structure
+  - [x] Sub-task: Create `Vulnerability` dataclass with required fields
+  - [x] Sub-task: Create `VulnerabilityBuilder` class
+  - [x] Sub-task: Generate unique vulnerability IDs (VULN-NNN)
 
-- [ ] Task 4.2: Implement threat status tracking
-  - [ ] Sub-task: Write tests for status assignment
-  - [ ] Sub-task: Mark threats as "confirmed" when code evidence found
-  - [ ] Sub-task: Mark threats as "not_confirmed" when no evidence found
-  - [ ] Sub-task: Include all threats in output regardless of status
+- [x] Task 4.2: Implement threat status tracking `31a0438`
+  - [x] Sub-task: Write tests for status assignment
+  - [x] Sub-task: Mark threats as "confirmed" when code evidence found
+  - [x] Sub-task: Mark threats as "not_confirmed" when no evidence found
+  - [x] Sub-task: Include all threats in output regardless of status
 
-- [ ] Task 4.3: Implement VULNERABILITIES.json output
-  - [ ] Sub-task: Write tests for JSON serialization
-  - [ ] Sub-task: Create `VulnerabilitySerializer` class
-  - [ ] Sub-task: Implement summary statistics generation
-  - [ ] Sub-task: Write artifact via ScanStateManager
+- [x] Task 4.3: Implement VULNERABILITIES.json output `31a0438`
+  - [x] Sub-task: Write tests for JSON serialization
+  - [x] Sub-task: Create `VulnerabilityOutput` class
+  - [x] Sub-task: Implement summary statistics generation
+  - [x] Sub-task: to_json() and to_dict() methods
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Vulnerability Output Generator' (Protocol in workflow.md)
 
