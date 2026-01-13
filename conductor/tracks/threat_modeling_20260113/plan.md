@@ -30,15 +30,15 @@
   - [x] Sub-task: Create templates for authentication components
   - [x] Sub-task: Create templates for external integration components
 
-- [~] Task 2.2: Implement STRIDE analyzer
-  - [ ] Sub-task: Write tests for STRIDE category analysis
-  - [ ] Sub-task: Create `STRIDEAnalyzer` class
-  - [ ] Sub-task: Implement Spoofing threat detection
-  - [ ] Sub-task: Implement Tampering threat detection
-  - [ ] Sub-task: Implement Repudiation threat detection
-  - [ ] Sub-task: Implement Information Disclosure threat detection
-  - [ ] Sub-task: Implement Denial of Service threat detection
-  - [ ] Sub-task: Implement Elevation of Privilege threat detection
+- [x] Task 2.2: Implement STRIDE analyzer `9088fd4`
+  - [x] Sub-task: Write tests for STRIDE category analysis
+  - [x] Sub-task: Create `STRIDEAnalyzer` class
+  - [x] Sub-task: Implement Spoofing threat detection
+  - [x] Sub-task: Implement Tampering threat detection
+  - [x] Sub-task: Implement Repudiation threat detection
+  - [x] Sub-task: Implement Information Disclosure threat detection
+  - [x] Sub-task: Implement Denial of Service threat detection
+  - [x] Sub-task: Implement Elevation of Privilege threat detection
 
 - [ ] Task 2.3: Implement severity classification
   - [ ] Sub-task: Write tests for severity assignment
