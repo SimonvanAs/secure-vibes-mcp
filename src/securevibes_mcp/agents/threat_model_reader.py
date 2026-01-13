@@ -9,6 +9,25 @@ from securevibes_mcp.storage import ScanStateManager
 
 
 @dataclass
+class ThreatValidationError:
+    """Validation error for a threat entry.
+
+    Attributes:
+        threat_index: Index of the threat entry in the threats list.
+        field: Name of the field that failed validation.
+        message: Description of the validation error.
+    """
+
+    threat_index: int
+    field: str
+    message: str
+
+
+# Required fields for threat entry validation
+REQUIRED_THREAT_FIELDS = frozenset({"id", "category", "component", "severity"})
+
+
+@dataclass
 class ParsedThreatEntry:
     """A parsed threat entry from THREAT_MODEL.json.
 
@@ -102,3 +121,70 @@ class ThreatModelReader:
             cvss_min=cvss_range.get("min", 0.0),
             cvss_max=cvss_range.get("max", 0.0),
         )
+
+    def _validate_threat_entry(
+        self, entry: dict[str, Any], index: int
+    ) -> list[ThreatValidationError]:
+        """Validate a single threat entry.
+
+        Args:
+            entry: Raw threat entry dictionary from JSON.
+            index: Index of the entry in the threats list.
+
+        Returns:
+            List of validation errors (empty if valid).
+        """
+        errors: list[ThreatValidationError] = []
+
+        for field in REQUIRED_THREAT_FIELDS:
+            if field not in entry or not entry[field]:
+                errors.append(
+                    ThreatValidationError(
+                        threat_index=index,
+                        field=field,
+                        message=f"Missing required field: {field}",
+                    )
+                )
+
+        return errors
+
+    def get_validation_errors(self) -> list[ThreatValidationError]:
+        """Get all validation errors for threat entries.
+
+        Returns:
+            List of validation errors across all threat entries.
+        """
+        data = self.read()
+        if data is None:
+            return []
+
+        threats = data.get("threats", [])
+        errors: list[ThreatValidationError] = []
+
+        for index, threat in enumerate(threats):
+            errors.extend(self._validate_threat_entry(threat, index))
+
+        return errors
+
+    def get_validated_threats(self) -> list[ParsedThreatEntry]:
+        """Get only valid threats as parsed entries.
+
+        Invalid entries are silently skipped. Use get_validation_errors()
+        to inspect what entries failed validation.
+
+        Returns:
+            List of ParsedThreatEntry objects for valid entries only.
+        """
+        data = self.read()
+        if data is None:
+            return []
+
+        threats = data.get("threats", [])
+        valid_threats: list[ParsedThreatEntry] = []
+
+        for index, threat in enumerate(threats):
+            errors = self._validate_threat_entry(threat, index)
+            if not errors:
+                valid_threats.append(self._parse_threat_entry(threat))
+
+        return valid_threats

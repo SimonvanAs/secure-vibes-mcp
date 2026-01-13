@@ -238,3 +238,247 @@ class TestThreatModelReaderParsing:
         assert threats[1].id == "THREAT-002"
         assert threats[0].category == "Spoofing"
         assert threats[1].category == "Tampering"
+
+
+class TestThreatValidation:
+    """Tests for threat entry validation."""
+
+    def test_validate_valid_entry(self, tmp_path: Path):
+        """Test validation passes for complete entry."""
+        from securevibes_mcp.agents.threat_model_reader import (
+            ThreatModelReader,
+        )
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "id": "THREAT-001",
+                    "category": "Spoofing",
+                    "component": "API",
+                    "description": "Test",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                    "severity": "high",
+                    "cvss_range": {"min": 7.0, "max": 8.9},
+                }
+            ],
+            "summary": {"total": 1},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        # Should not raise
+        threats = reader.get_validated_threats()
+        assert len(threats) == 1
+
+    def test_validate_missing_id(self, tmp_path: Path):
+        """Test validation fails when id is missing."""
+        from securevibes_mcp.agents.threat_model_reader import (
+            ThreatModelReader,
+        )
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "category": "Spoofing",
+                    "component": "API",
+                    "description": "Test",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                    "severity": "high",
+                }
+            ],
+            "summary": {"total": 1},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        errors = reader.get_validation_errors()
+        assert len(errors) == 1
+        assert "id" in errors[0].field
+
+    def test_validate_missing_category(self, tmp_path: Path):
+        """Test validation fails when category is missing."""
+        from securevibes_mcp.agents.threat_model_reader import (
+            ThreatModelReader,
+        )
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "id": "THREAT-001",
+                    "component": "API",
+                    "description": "Test",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                    "severity": "high",
+                }
+            ],
+            "summary": {"total": 1},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        errors = reader.get_validation_errors()
+        assert len(errors) == 1
+        assert "category" in errors[0].field
+
+    def test_validate_missing_component(self, tmp_path: Path):
+        """Test validation fails when component is missing."""
+        from securevibes_mcp.agents.threat_model_reader import (
+            ThreatModelReader,
+        )
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "id": "THREAT-001",
+                    "category": "Spoofing",
+                    "description": "Test",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                    "severity": "high",
+                }
+            ],
+            "summary": {"total": 1},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        errors = reader.get_validation_errors()
+        assert len(errors) == 1
+        assert "component" in errors[0].field
+
+    def test_validate_missing_severity(self, tmp_path: Path):
+        """Test validation fails when severity is missing."""
+        from securevibes_mcp.agents.threat_model_reader import (
+            ThreatModelReader,
+        )
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "id": "THREAT-001",
+                    "category": "Spoofing",
+                    "component": "API",
+                    "description": "Test",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                }
+            ],
+            "summary": {"total": 1},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        errors = reader.get_validation_errors()
+        assert len(errors) == 1
+        assert "severity" in errors[0].field
+
+    def test_validate_multiple_errors(self, tmp_path: Path):
+        """Test validation collects multiple errors."""
+        from securevibes_mcp.agents.threat_model_reader import (
+            ThreatModelReader,
+        )
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "description": "Test",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                }
+            ],
+            "summary": {"total": 1},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        errors = reader.get_validation_errors()
+        # Missing: id, category, component, severity
+        assert len(errors) == 4
+
+    def test_validate_skips_invalid_entries(self, tmp_path: Path):
+        """Test get_validated_threats skips invalid entries."""
+        from securevibes_mcp.agents.threat_model_reader import ThreatModelReader
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+
+        threat_model = {
+            "version": "1.0",
+            "generated_at": "2026-01-13T00:00:00Z",
+            "project_path": str(tmp_path),
+            "threats": [
+                {
+                    "id": "THREAT-001",
+                    "category": "Spoofing",
+                    "component": "API",
+                    "description": "Valid",
+                    "attack_vector": "Vector",
+                    "impact": "Impact",
+                    "severity": "high",
+                    "cvss_range": {"min": 7.0, "max": 8.9},
+                },
+                {
+                    "description": "Invalid - missing required fields",
+                },
+            ],
+            "summary": {"total": 2},
+        }
+        (securevibes_dir / "THREAT_MODEL.json").write_text(json.dumps(threat_model))
+
+        reader = ThreatModelReader(root_path=tmp_path)
+        threats = reader.get_validated_threats()
+        # Only one valid threat
+        assert len(threats) == 1
+        assert threats[0].id == "THREAT-001"
+
+    def test_validation_error_dataclass(self):
+        """Test ThreatValidationError dataclass."""
+        from securevibes_mcp.agents.threat_model_reader import ThreatValidationError
+
+        error = ThreatValidationError(
+            threat_index=0,
+            field="id",
+            message="Missing required field",
+        )
+        assert error.threat_index == 0
+        assert error.field == "id"
+        assert error.message == "Missing required field"
