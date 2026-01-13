@@ -49,11 +49,11 @@
 
 ## Phase 3: Threat Model Generation
 
-- [ ] Task 3.1: Implement threat model builder
-  - [ ] Sub-task: Write tests for threat model structure
-  - [ ] Sub-task: Create `ThreatModelBuilder` class
-  - [ ] Sub-task: Generate unique threat IDs
-  - [ ] Sub-task: Build threat entries with all required fields
+- [x] Task 3.1: Implement threat model builder `cf18301`
+  - [x] Sub-task: Write tests for threat model structure
+  - [x] Sub-task: Create `ThreatModelBuilder` class
+  - [x] Sub-task: Generate unique threat IDs
+  - [x] Sub-task: Build threat entries with all required fields
 
 - [ ] Task 3.2: Implement THREAT_MODEL.json output
   - [ ] Sub-task: Write tests for JSON serialization
