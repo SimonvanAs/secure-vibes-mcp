@@ -95,6 +95,42 @@ class TestDASTTester:
         assert tester is not None
         assert tester.target_url == "http://localhost:8080"
 
+    def test_tester_accepts_https_url(self):
+        """Test that DASTTester accepts HTTPS URLs."""
+        from securevibes_mcp.agents.dast_tester import DASTTester
+
+        tester = DASTTester(target_url="https://example.com")
+        assert tester.target_url == "https://example.com"
+
+    def test_tester_rejects_empty_url(self):
+        """Test that DASTTester rejects empty URL."""
+        from securevibes_mcp.agents.dast_tester import DASTTester, InvalidTargetURLError
+
+        with pytest.raises(InvalidTargetURLError, match="cannot be empty"):
+            DASTTester(target_url="")
+
+    def test_tester_rejects_url_without_scheme(self):
+        """Test that DASTTester rejects URL without proper scheme."""
+        from securevibes_mcp.agents.dast_tester import DASTTester, InvalidTargetURLError
+
+        # "localhost:8080" is parsed as scheme="localhost", so it fails scheme validation
+        with pytest.raises(InvalidTargetURLError, match="http or https"):
+            DASTTester(target_url="localhost:8080")
+
+    def test_tester_rejects_non_http_scheme(self):
+        """Test that DASTTester rejects non-HTTP schemes."""
+        from securevibes_mcp.agents.dast_tester import DASTTester, InvalidTargetURLError
+
+        with pytest.raises(InvalidTargetURLError, match="http or https"):
+            DASTTester(target_url="ftp://example.com")
+
+    def test_tester_rejects_url_without_host(self):
+        """Test that DASTTester rejects URL without host."""
+        from securevibes_mcp.agents.dast_tester import DASTTester, InvalidTargetURLError
+
+        with pytest.raises(InvalidTargetURLError, match="missing host"):
+            DASTTester(target_url="http://")
+
     @pytest.mark.asyncio
     async def test_tester_detects_sql_error(self):
         """Test that tester detects SQL errors in response."""

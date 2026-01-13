@@ -1,9 +1,16 @@
 """DAST tester for dynamic vulnerability testing."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
+
+
+class InvalidTargetURLError(ValueError):
+    """Raised when target URL is invalid."""
+
+    pass
 
 
 @dataclass
@@ -196,10 +203,40 @@ class DASTTester:
         Args:
             target_url: Base URL of the target application.
             timeout: HTTP request timeout in seconds.
+
+        Raises:
+            InvalidTargetURLError: If the target URL is invalid.
         """
+        self._validate_url(target_url)
         self.target_url = target_url
         self.timeout = timeout
         self.payload_generator = PayloadGenerator()
+
+    @staticmethod
+    def _validate_url(url: str) -> None:
+        """Validate that a URL is well-formed and uses HTTP(S).
+
+        Args:
+            url: The URL to validate.
+
+        Raises:
+            InvalidTargetURLError: If the URL is invalid.
+        """
+        if not url:
+            raise InvalidTargetURLError("Target URL cannot be empty")
+
+        parsed = urlparse(url)
+
+        if not parsed.scheme:
+            raise InvalidTargetURLError(f"Target URL missing scheme: {url}")
+
+        if parsed.scheme not in ("http", "https"):
+            raise InvalidTargetURLError(
+                f"Target URL must use http or https scheme, got: {parsed.scheme}"
+            )
+
+        if not parsed.netloc:
+            raise InvalidTargetURLError(f"Target URL missing host: {url}")
 
     async def _make_request(
         self,
