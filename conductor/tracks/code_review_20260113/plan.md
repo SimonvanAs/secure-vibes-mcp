@@ -17,24 +17,24 @@
 
 ## Phase 2: Vulnerability Pattern System
 
-- [ ] Task 2.1: Create vulnerability pattern registry
-  - [ ] Sub-task: Write tests for pattern registry operations
-  - [ ] Sub-task: Define `VulnerabilityPattern` dataclass
-  - [ ] Sub-task: Create `PatternRegistry` class with pattern lookup by STRIDE category
+- [x] Task 2.1: Create vulnerability pattern registry `6fe4b35`
+  - [x] Sub-task: Write tests for pattern registry operations
+  - [x] Sub-task: Define `VulnerabilityPattern` dataclass
+  - [x] Sub-task: Create `PatternRegistry` class with pattern lookup by STRIDE category
 
-- [ ] Task 2.2: Implement STRIDE category patterns
-  - [ ] Sub-task: Write tests for pattern matching
-  - [ ] Sub-task: Implement Spoofing patterns (auth bypass, weak credentials)
-  - [ ] Sub-task: Implement Tampering patterns (SQL injection, command injection, XSS)
-  - [ ] Sub-task: Implement Repudiation patterns (missing logging)
-  - [ ] Sub-task: Implement InfoDisclosure patterns (hardcoded secrets, data exposure)
-  - [ ] Sub-task: Implement DoS patterns (resource exhaustion, regex DoS)
-  - [ ] Sub-task: Implement EoP patterns (privilege escalation, missing authz)
+- [x] Task 2.2: Implement STRIDE category patterns `6fe4b35`
+  - [x] Sub-task: Write tests for pattern matching
+  - [x] Sub-task: Implement Spoofing patterns (auth bypass, weak credentials)
+  - [x] Sub-task: Implement Tampering patterns (SQL injection, command injection, XSS)
+  - [x] Sub-task: Implement Repudiation patterns (missing logging)
+  - [x] Sub-task: Implement InfoDisclosure patterns (hardcoded secrets, data exposure)
+  - [x] Sub-task: Implement DoS patterns (resource exhaustion, regex DoS)
+  - [x] Sub-task: Implement EoP patterns (privilege escalation, missing authz)
 
-- [ ] Task 2.3: Implement CWE mapping
-  - [ ] Sub-task: Write tests for CWE lookups
-  - [ ] Sub-task: Create CWE ID mapping for each pattern type
-  - [ ] Sub-task: Include CWE descriptions in mappings
+- [x] Task 2.3: Implement CWE mapping `6fe4b35`
+  - [x] Sub-task: Write tests for CWE lookups
+  - [x] Sub-task: Create CWE ID mapping for each pattern type
+  - [x] Sub-task: Include CWE descriptions in mappings
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Vulnerability Pattern System' (Protocol in workflow.md)
 
