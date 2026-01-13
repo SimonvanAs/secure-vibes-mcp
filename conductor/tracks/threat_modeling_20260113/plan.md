@@ -20,7 +20,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 1: SECURITY.md Parser' (Protocol in workflow.md)
 
-## Phase 2: STRIDE Analysis Engine
+## Phase 2: STRIDE Analysis Engine [checkpoint: 484419d]
 
 - [x] Task 2.1: Create threat template system `45fe6fd`
   - [x] Sub-task: Write tests for threat template loading
@@ -40,12 +40,12 @@
   - [x] Sub-task: Implement Denial of Service threat detection
   - [x] Sub-task: Implement Elevation of Privilege threat detection
 
-- [ ] Task 2.3: Implement severity classification
-  - [ ] Sub-task: Write tests for severity assignment
-  - [ ] Sub-task: Implement CVSS-aligned severity mapper
-  - [ ] Sub-task: Apply severity to identified threats
+- [x] Task 2.3: Implement severity classification `484419d`
+  - [x] Sub-task: Write tests for severity assignment
+  - [x] Sub-task: Implement CVSS-aligned severity mapper
+  - [x] Sub-task: Apply severity to identified threats
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: STRIDE Analysis Engine' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: STRIDE Analysis Engine' (Protocol in workflow.md)
 
 ## Phase 3: Threat Model Generation
 
