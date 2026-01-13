@@ -133,7 +133,7 @@ class TestMCPProtocolIntegration:
         assert "error" in result
 
         # Unimplemented tool returns placeholder structure
-        result = await server.call_tool("run_threat_modeling", {"path": "/tmp"})
+        result = await server.call_tool("run_code_review", {"path": "/tmp"})
         assert "error" in result
         assert "code" in result
         assert "message" in result

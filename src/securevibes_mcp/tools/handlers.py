@@ -5,6 +5,7 @@ from typing import Any
 
 from securevibes_mcp.agents.generator import SecurityDocGenerator
 from securevibes_mcp.agents.scanner import CodebaseScanner
+from securevibes_mcp.agents.threat_modeling_handler import ThreatModelingHandler
 from securevibes_mcp.storage import ScanStateManager
 from securevibes_mcp.storage.manager import VALID_ARTIFACTS
 
@@ -163,4 +164,51 @@ async def run_assessment(
         "frameworks": scan_result.frameworks,
         "artifact": "SECURITY.md",
         "artifact_size": len(security_doc),
+    }
+
+
+async def run_threat_modeling(
+    path: str,
+    focus_components: list[str] | None = None,
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    """Run STRIDE threat analysis on documented architecture.
+
+    Reads SECURITY.md artifact and performs threat modeling using STRIDE
+    methodology, generating THREAT_MODEL.json artifact.
+
+    Args:
+        path: Absolute path to the codebase.
+        focus_components: Optional list of component names to analyze.
+
+    Returns:
+        Dictionary with analysis results or error information.
+    """
+    # Validate path
+    validation_error = _validate_path(path)
+    if validation_error:
+        return validation_error
+
+    # Run threat modeling
+    handler = ThreatModelingHandler()
+    result = handler.run(path, focus_components=focus_components)
+
+    # Convert handler result to standard response format
+    if result["status"] == "error":
+        return {
+            "error": True,
+            "code": "DEPENDENCY_ERROR",
+            "message": result["message"],
+            "path": path,
+        }
+
+    return {
+        "error": False,
+        "path": path,
+        "threats_identified": result["threats_identified"],
+        "components_analyzed": result["components_analyzed"],
+        "artifact": "THREAT_MODEL.json",
+        "artifact_path": result["artifact_path"],
+        "summary": result["summary"],
+        "invalid_components": result.get("invalid_components", []),
     }

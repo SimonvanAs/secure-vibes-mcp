@@ -69,11 +69,11 @@
 
 ## Phase 4: Tool Handler Integration
 
-- [ ] Task 4.1: Implement run_threat_modeling handler
-  - [ ] Sub-task: Write integration tests for full workflow
-  - [ ] Sub-task: Wire up parser, analyzer, and builder components
-  - [ ] Sub-task: Validate SECURITY.md dependency via DependencyValidator
-  - [ ] Sub-task: Store THREAT_MODEL.json via ScanStateManager
+- [x] Task 4.1: Implement run_threat_modeling handler `dafcd53`
+  - [x] Sub-task: Write integration tests for full workflow
+  - [x] Sub-task: Wire up parser, analyzer, and builder components
+  - [x] Sub-task: Validate SECURITY.md dependency via DependencyValidator
+  - [x] Sub-task: Store THREAT_MODEL.json via ScanStateManager
 
 - [ ] Task 4.2: Update tool registry
   - [ ] Sub-task: Write tests for tool dispatch

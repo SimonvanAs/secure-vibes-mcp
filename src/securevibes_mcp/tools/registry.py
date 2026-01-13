@@ -4,7 +4,12 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
 from typing import Any
 
-from securevibes_mcp.tools.handlers import get_artifact, get_scan_status, run_assessment
+from securevibes_mcp.tools.handlers import (
+    get_artifact,
+    get_scan_status,
+    run_assessment,
+    run_threat_modeling,
+)
 
 
 @dataclass
@@ -272,7 +277,7 @@ def get_tool_registry() -> ToolRegistry:
             name="run_threat_modeling",
             description="Performs STRIDE threat analysis on documented architecture",
             inputSchema=THREAT_MODELING_SCHEMA,
-            handler=lambda **kw: not_implemented("run_threat_modeling", **kw),
+            handler=run_threat_modeling,
         )
     )
 
