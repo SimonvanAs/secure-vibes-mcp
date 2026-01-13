@@ -121,6 +121,22 @@ Retrieve any artifact content:
 "Show me the THREAT_MODEL.json for /path/to/my/project"
 ```
 
+### 8. Get Vulnerabilities
+
+Query and filter vulnerability data:
+
+```
+"Show me critical vulnerabilities for /path/to/my/project"
+"Get SQL injection vulnerabilities (CWE-89) in /path/to/my/project"
+"List vulnerabilities in the auth module"
+```
+
+Options:
+- `severity`: Filter by minimum severity (critical, high, medium, low)
+- `cwe_id`: Filter by specific CWE (e.g., "CWE-89")
+- `file_path`: Filter by file path pattern
+- `limit`: Maximum results (default: 10)
+
 ## Example Conversation
 
 ```

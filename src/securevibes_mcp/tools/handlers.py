@@ -375,3 +375,102 @@ async def generate_report(
         "summary": result["summary"],
         "message": result["message"],
     }
+
+
+# Severity ordering for filtering (lower index = more severe)
+SEVERITY_ORDER = ["critical", "high", "medium", "low"]
+
+
+async def get_vulnerabilities(
+    path: str,
+    severity: str | None = None,
+    cwe_id: str | None = None,
+    file_path: str | None = None,
+    limit: int = 10,
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    """Get filtered vulnerability data from VULNERABILITIES.json.
+
+    Args:
+        path: Absolute path to the codebase.
+        severity: Filter by minimum severity level (critical, high, medium, low).
+        cwe_id: Filter by specific CWE ID (e.g., "CWE-89").
+        file_path: Filter by file path pattern (substring match).
+        limit: Maximum number of results to return.
+
+    Returns:
+        Dictionary with filtered vulnerabilities or error information.
+    """
+    from securevibes_mcp.agents.vulnerability_reader import VulnerabilityReader
+
+    # Validate path
+    validation_error = _validate_path(path)
+    if validation_error:
+        return validation_error
+
+    project_path = Path(path)
+    reader = VulnerabilityReader(root_path=project_path)
+
+    # Read vulnerabilities
+    data = reader.read()
+    if data is None:
+        return {
+            "error": True,
+            "code": "ARTIFACT_NOT_FOUND",
+            "message": "VULNERABILITIES.json not found. Run code review first.",
+            "path": path,
+        }
+
+    vulnerabilities = data.get("vulnerabilities", [])
+
+    # Filter by minimum severity
+    if severity:
+        if severity not in SEVERITY_ORDER:
+            return {
+                "error": True,
+                "code": "INVALID_SEVERITY",
+                "message": f"Invalid severity: {severity}. Must be one of: {SEVERITY_ORDER}",
+                "path": path,
+            }
+        severity_threshold = SEVERITY_ORDER.index(severity)
+        vulnerabilities = [
+            v for v in vulnerabilities
+            if SEVERITY_ORDER.index(v.get("severity", "low")) <= severity_threshold
+        ]
+
+    # Filter by CWE ID
+    if cwe_id:
+        vulnerabilities = [
+            v for v in vulnerabilities
+            if v.get("cwe_id") == cwe_id
+        ]
+
+    # Filter by file path pattern
+    if file_path:
+        vulnerabilities = [
+            v for v in vulnerabilities
+            if v.get("file_path") and file_path in v.get("file_path", "")
+        ]
+
+    # Sort by severity (most severe first)
+    vulnerabilities.sort(
+        key=lambda v: SEVERITY_ORDER.index(v.get("severity", "low"))
+    )
+
+    # Apply limit
+    total_count = len(vulnerabilities)
+    vulnerabilities = vulnerabilities[:limit]
+
+    return {
+        "error": False,
+        "path": path,
+        "total_count": total_count,
+        "returned_count": len(vulnerabilities),
+        "filters_applied": {
+            "severity": severity,
+            "cwe_id": cwe_id,
+            "file_path": file_path,
+            "limit": limit,
+        },
+        "vulnerabilities": vulnerabilities,
+    }

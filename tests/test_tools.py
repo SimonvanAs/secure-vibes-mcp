@@ -112,59 +112,163 @@ class TestToolDispatch:
             await server.call_tool("run_assessment", {})
 
 
-class TestPlaceholderResponses:
-    """Tests for placeholder tool implementations."""
+class TestGetVulnerabilities:
+    """Tests for get_vulnerabilities tool."""
 
     @pytest.mark.asyncio
-    async def test_placeholder_returns_not_implemented_error(self):
-        """Test that placeholder tools return not implemented error."""
+    async def test_get_vulnerabilities_no_artifact(self, tmp_path):
+        """Test get_vulnerabilities when VULNERABILITIES.json doesn't exist."""
         server = SecureVibesMCPServer()
-        # Use get_vulnerabilities which is still a placeholder
-        result = await server.call_tool("get_vulnerabilities", {"path": "/tmp/test"})
+        result = await server.call_tool("get_vulnerabilities", {"path": str(tmp_path)})
 
         assert result["error"] is True
-        assert result["code"] == "NOT_IMPLEMENTED"
+        assert result["code"] == "ARTIFACT_NOT_FOUND"
 
     @pytest.mark.asyncio
-    async def test_placeholder_includes_tool_name(self):
-        """Test that placeholder response includes the tool name."""
-        server = SecureVibesMCPServer()
-        # Use get_vulnerabilities which is still a placeholder
-        result = await server.call_tool("get_vulnerabilities", {"path": "/tmp/test"})
+    async def test_get_vulnerabilities_returns_data(self, tmp_path):
+        """Test get_vulnerabilities returns vulnerability data."""
+        import json
 
-        assert result["tool"] == "get_vulnerabilities"
-        assert "get_vulnerabilities" in result["message"]
+        # Create VULNERABILITIES.json artifact
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+        vuln_data = {
+            "version": "1.0.0",
+            "vulnerabilities": [
+                {"id": "VULN-001", "severity": "critical", "cwe_id": "CWE-89"},
+                {"id": "VULN-002", "severity": "high", "cwe_id": "CWE-79"},
+            ],
+        }
+        (securevibes_dir / "VULNERABILITIES.json").write_text(json.dumps(vuln_data))
+
+        server = SecureVibesMCPServer()
+        result = await server.call_tool("get_vulnerabilities", {"path": str(tmp_path)})
+
+        assert result["error"] is False
+        assert result["total_count"] == 2
+        assert len(result["vulnerabilities"]) == 2
 
     @pytest.mark.asyncio
-    async def test_unimplemented_query_tools_return_placeholder(self):
-        """Test that unimplemented query tools return placeholder responses."""
-        server = SecureVibesMCPServer()
-        # Only get_vulnerabilities is still a placeholder
-        query_tools = [
-            ("get_vulnerabilities", {"path": "/tmp"}),
-        ]
+    async def test_get_vulnerabilities_filter_by_severity(self, tmp_path):
+        """Test filtering vulnerabilities by severity."""
+        import json
 
-        for tool_name, args in query_tools:
-            result = await server.call_tool(tool_name, args)
-            assert result["error"] is True, f"{tool_name} should return error"
-            assert result["code"] == "NOT_IMPLEMENTED"
-            assert result["tool"] == tool_name
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+        vuln_data = {
+            "version": "1.0.0",
+            "vulnerabilities": [
+                {"id": "VULN-001", "severity": "critical"},
+                {"id": "VULN-002", "severity": "high"},
+                {"id": "VULN-003", "severity": "medium"},
+                {"id": "VULN-004", "severity": "low"},
+            ],
+        }
+        (securevibes_dir / "VULNERABILITIES.json").write_text(json.dumps(vuln_data))
+
+        server = SecureVibesMCPServer()
+        result = await server.call_tool(
+            "get_vulnerabilities", {"path": str(tmp_path), "severity": "high"}
+        )
+
+        assert result["error"] is False
+        assert result["total_count"] == 2  # critical and high
+        severities = [v["severity"] for v in result["vulnerabilities"]]
+        assert "critical" in severities
+        assert "high" in severities
+        assert "medium" not in severities
+        assert "low" not in severities
 
     @pytest.mark.asyncio
-    async def test_placeholder_response_structure(self):
-        """Test that placeholder response has required fields."""
+    async def test_get_vulnerabilities_filter_by_cwe(self, tmp_path):
+        """Test filtering vulnerabilities by CWE ID."""
+        import json
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+        vuln_data = {
+            "version": "1.0.0",
+            "vulnerabilities": [
+                {"id": "VULN-001", "severity": "critical", "cwe_id": "CWE-89"},
+                {"id": "VULN-002", "severity": "high", "cwe_id": "CWE-79"},
+                {"id": "VULN-003", "severity": "high", "cwe_id": "CWE-89"},
+            ],
+        }
+        (securevibes_dir / "VULNERABILITIES.json").write_text(json.dumps(vuln_data))
+
         server = SecureVibesMCPServer()
-        # Use get_vulnerabilities which is still a placeholder
-        result = await server.call_tool("get_vulnerabilities", {"path": "/tmp"})
+        result = await server.call_tool(
+            "get_vulnerabilities", {"path": str(tmp_path), "cwe_id": "CWE-89"}
+        )
 
-        # Verify all required fields are present
-        assert "error" in result
-        assert "code" in result
-        assert "message" in result
-        assert "tool" in result
+        assert result["error"] is False
+        assert result["total_count"] == 2
+        for v in result["vulnerabilities"]:
+            assert v["cwe_id"] == "CWE-89"
 
-        # Verify types
-        assert isinstance(result["error"], bool)
-        assert isinstance(result["code"], str)
-        assert isinstance(result["message"], str)
-        assert isinstance(result["tool"], str)
+    @pytest.mark.asyncio
+    async def test_get_vulnerabilities_filter_by_file_path(self, tmp_path):
+        """Test filtering vulnerabilities by file path pattern."""
+        import json
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+        vuln_data = {
+            "version": "1.0.0",
+            "vulnerabilities": [
+                {"id": "VULN-001", "severity": "high", "file_path": "/app/auth/login.py"},
+                {"id": "VULN-002", "severity": "high", "file_path": "/app/api/users.py"},
+                {"id": "VULN-003", "severity": "high", "file_path": "/app/auth/session.py"},
+            ],
+        }
+        (securevibes_dir / "VULNERABILITIES.json").write_text(json.dumps(vuln_data))
+
+        server = SecureVibesMCPServer()
+        result = await server.call_tool(
+            "get_vulnerabilities", {"path": str(tmp_path), "file_path": "auth"}
+        )
+
+        assert result["error"] is False
+        assert result["total_count"] == 2
+        for v in result["vulnerabilities"]:
+            assert "auth" in v["file_path"]
+
+    @pytest.mark.asyncio
+    async def test_get_vulnerabilities_respects_limit(self, tmp_path):
+        """Test that limit parameter restricts results."""
+        import json
+
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+        vuln_data = {
+            "version": "1.0.0",
+            "vulnerabilities": [
+                {"id": f"VULN-{i:03d}", "severity": "high"} for i in range(20)
+            ],
+        }
+        (securevibes_dir / "VULNERABILITIES.json").write_text(json.dumps(vuln_data))
+
+        server = SecureVibesMCPServer()
+        result = await server.call_tool(
+            "get_vulnerabilities", {"path": str(tmp_path), "limit": 5}
+        )
+
+        assert result["error"] is False
+        assert result["total_count"] == 20
+        assert result["returned_count"] == 5
+        assert len(result["vulnerabilities"]) == 5
+
+    @pytest.mark.asyncio
+    async def test_get_vulnerabilities_invalid_severity(self, tmp_path):
+        """Test error on invalid severity value."""
+        securevibes_dir = tmp_path / ".securevibes"
+        securevibes_dir.mkdir()
+        (securevibes_dir / "VULNERABILITIES.json").write_text('{"vulnerabilities": []}')
+
+        server = SecureVibesMCPServer()
+        result = await server.call_tool(
+            "get_vulnerabilities", {"path": str(tmp_path), "severity": "invalid"}
+        )
+
+        assert result["error"] is True
+        assert result["code"] == "INVALID_SEVERITY"

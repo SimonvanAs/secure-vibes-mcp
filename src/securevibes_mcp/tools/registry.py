@@ -8,6 +8,7 @@ from securevibes_mcp.tools.handlers import (
     generate_report,
     get_artifact,
     get_scan_status,
+    get_vulnerabilities,
     run_assessment,
     run_code_review,
     run_dast,
@@ -327,7 +328,7 @@ def get_tool_registry() -> ToolRegistry:
             name="get_vulnerabilities",
             description="Retrieves filtered vulnerability data",
             inputSchema=GET_VULNERABILITIES_SCHEMA,
-            handler=lambda **kw: not_implemented("get_vulnerabilities", **kw),
+            handler=get_vulnerabilities,
         )
     )
 

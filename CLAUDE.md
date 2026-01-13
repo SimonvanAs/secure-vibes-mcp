@@ -48,7 +48,7 @@ Each agent depends on artifacts from the previous stage:
 
 **Query Tools:**
 - `get_scan_status` - Returns state of all artifacts **(Implemented)**
-- `get_vulnerabilities` - Filtered vulnerability retrieval *(Placeholder)*
+- `get_vulnerabilities` - Filtered vulnerability retrieval **(Implemented)**
 - `get_artifact` - Raw artifact content access **(Implemented)**
 
 ## Build & Run Commands
