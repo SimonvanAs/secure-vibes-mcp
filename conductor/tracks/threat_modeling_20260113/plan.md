@@ -67,7 +67,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Threat Model Generation' (Protocol in workflow.md)
 
-## Phase 4: Tool Handler Integration
+## Phase 4: Tool Handler Integration [checkpoint: bf204fe]
 
 - [x] Task 4.1: Implement run_threat_modeling handler `dafcd53`
   - [x] Sub-task: Write integration tests for full workflow
@@ -80,9 +80,9 @@
   - [x] Sub-task: Replace placeholder with real handler
   - [x] Sub-task: Verify tool schema matches implementation
 
-- [ ] Task 4.3: End-to-end testing
-  - [ ] Sub-task: Write E2E test for complete threat modeling workflow
-  - [ ] Sub-task: Test with various project types
-  - [ ] Sub-task: Verify artifact persistence and retrieval
+- [x] Task 4.3: End-to-end testing `bf204fe`
+  - [x] Sub-task: Write E2E test for complete threat modeling workflow
+  - [x] Sub-task: Test with various project types
+  - [x] Sub-task: Verify artifact persistence and retrieval
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Tool Handler Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Tool Handler Integration' (Protocol in workflow.md)
