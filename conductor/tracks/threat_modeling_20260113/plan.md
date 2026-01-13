@@ -22,15 +22,15 @@
 
 ## Phase 2: STRIDE Analysis Engine
 
-- [~] Task 2.1: Create threat template system
-  - [ ] Sub-task: Write tests for threat template loading
-  - [ ] Sub-task: Define threat template data structure
-  - [ ] Sub-task: Create templates for API endpoint components
-  - [ ] Sub-task: Create templates for data store components
-  - [ ] Sub-task: Create templates for authentication components
-  - [ ] Sub-task: Create templates for external integration components
+- [x] Task 2.1: Create threat template system `45fe6fd`
+  - [x] Sub-task: Write tests for threat template loading
+  - [x] Sub-task: Define threat template data structure
+  - [x] Sub-task: Create templates for API endpoint components
+  - [x] Sub-task: Create templates for data store components
+  - [x] Sub-task: Create templates for authentication components
+  - [x] Sub-task: Create templates for external integration components
 
-- [ ] Task 2.2: Implement STRIDE analyzer
+- [~] Task 2.2: Implement STRIDE analyzer
   - [ ] Sub-task: Write tests for STRIDE category analysis
   - [ ] Sub-task: Create `STRIDEAnalyzer` class
   - [ ] Sub-task: Implement Spoofing threat detection
