@@ -1,6 +1,6 @@
 # Implementation Plan: Threat Modeling Agent
 
-## Phase 1: SECURITY.md Parser
+## Phase 1: SECURITY.md Parser [checkpoint: 2aab884]
 
 - [x] Task 1.1: Implement SECURITY.md reader `c1239d6`
   - [x] Sub-task: Write tests for reading SECURITY.md artifact
@@ -18,7 +18,7 @@
   - [x] Sub-task: Parse data flow patterns from SECURITY.md
   - [x] Sub-task: Map connections between components
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: SECURITY.md Parser' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: SECURITY.md Parser' (Protocol in workflow.md)
 
 ## Phase 2: STRIDE Analysis Engine
 
