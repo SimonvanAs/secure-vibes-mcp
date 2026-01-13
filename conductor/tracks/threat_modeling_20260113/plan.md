@@ -47,7 +47,7 @@
 
 - [x] Task: Conductor - User Manual Verification 'Phase 2: STRIDE Analysis Engine' (Protocol in workflow.md)
 
-## Phase 3: Threat Model Generation
+## Phase 3: Threat Model Generation [checkpoint: c1f839e]
 
 - [x] Task 3.1: Implement threat model builder `cf18301`
   - [x] Sub-task: Write tests for threat model structure
@@ -60,12 +60,12 @@
   - [x] Sub-task: Define THREAT_MODEL.json schema
   - [x] Sub-task: Implement JSON generation with proper formatting
 
-- [ ] Task 3.3: Implement focus component filtering
-  - [ ] Sub-task: Write tests for component filtering
-  - [ ] Sub-task: Filter analysis to specified components
-  - [ ] Sub-task: Handle empty/invalid focus_components gracefully
+- [x] Task 3.3: Implement focus component filtering `c1f839e`
+  - [x] Sub-task: Write tests for component filtering
+  - [x] Sub-task: Filter analysis to specified components
+  - [x] Sub-task: Handle empty/invalid focus_components gracefully
 
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Threat Model Generation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Threat Model Generation' (Protocol in workflow.md)
 
 ## Phase 4: Tool Handler Integration
 
