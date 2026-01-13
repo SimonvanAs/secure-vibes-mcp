@@ -17,8 +17,9 @@ SecureVibes MCP Server is a Model Context Protocol server that exposes security 
 ### Agent Pipeline & Dependencies
 ```
 assessment → threat-modeling → code-review → dast → report
-     ↓              ↓               ↓          ↓
-SECURITY.md → THREAT_MODEL.json → VULNERABILITIES.json → DAST_VALIDATION.json
+     ↓              ↓               ↓          ↓         ↓
+SECURITY.md → THREAT_MODEL.json → VULNERABILITIES.json → DAST_VALIDATION.json → scan_results.json
+                                                                                 scan_report.md
 ```
 
 Each agent depends on artifacts from the previous stage:
@@ -40,10 +41,10 @@ Each agent depends on artifacts from the previous stage:
 
 **Core Agent Tools:**
 - `run_assessment` - Analyzes codebase architecture, creates `SECURITY.md` **(Implemented)**
-- `run_threat_modeling` - STRIDE analysis, creates `THREAT_MODEL.json` *(Placeholder)*
-- `run_code_review` - Validates threats, creates `VULNERABILITIES.json` *(Placeholder)*
-- `run_dast` - Dynamic testing against running app, creates `DAST_VALIDATION.json` *(Placeholder)*
-- `generate_report` - Compiles findings into `scan_results.json` and `scan_report.md` *(Placeholder)*
+- `run_threat_modeling` - STRIDE analysis, creates `THREAT_MODEL.json` **(Implemented)**
+- `run_code_review` - Validates threats, creates `VULNERABILITIES.json` **(Implemented)**
+- `run_dast` - Dynamic testing against running app, creates `DAST_VALIDATION.json` **(Implemented)**
+- `generate_report` - Compiles findings into `scan_results.json` and `scan_report.md` **(Implemented)**
 
 **Query Tools:**
 - `get_scan_status` - Returns state of all artifacts **(Implemented)**
