@@ -22,7 +22,7 @@
 
 ## Phase 2: STRIDE Analysis Engine
 
-- [ ] Task 2.1: Create threat template system
+- [~] Task 2.1: Create threat template system
   - [ ] Sub-task: Write tests for threat template loading
   - [ ] Sub-task: Define threat template data structure
   - [ ] Sub-task: Create templates for API endpoint components
