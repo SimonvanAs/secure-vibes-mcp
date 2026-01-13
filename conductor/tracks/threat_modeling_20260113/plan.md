@@ -75,10 +75,10 @@
   - [x] Sub-task: Validate SECURITY.md dependency via DependencyValidator
   - [x] Sub-task: Store THREAT_MODEL.json via ScanStateManager
 
-- [ ] Task 4.2: Update tool registry
-  - [ ] Sub-task: Write tests for tool dispatch
-  - [ ] Sub-task: Replace placeholder with real handler
-  - [ ] Sub-task: Verify tool schema matches implementation
+- [x] Task 4.2: Update tool registry `43993e0`
+  - [x] Sub-task: Write tests for tool dispatch
+  - [x] Sub-task: Replace placeholder with real handler
+  - [x] Sub-task: Verify tool schema matches implementation
 
 - [ ] Task 4.3: End-to-end testing
   - [ ] Sub-task: Write E2E test for complete threat modeling workflow

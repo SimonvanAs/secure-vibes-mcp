@@ -248,3 +248,134 @@ class TestErrorHandling:
         server = SecureVibesMCPServer()
         with pytest.raises(ValueError, match="Unknown tool"):
             await server.call_tool("nonexistent_tool", {})
+
+
+class TestThreatModelingWorkflowE2E:
+    """End-to-end tests for the complete threat modeling workflow."""
+
+    @pytest.mark.asyncio
+    async def test_complete_threat_modeling_workflow(self, tmp_path: Path):
+        """Test the full threat modeling workflow through the server."""
+        # Setup: Create a project structure
+        (tmp_path / "src").mkdir()
+        (tmp_path / "src" / "api.py").write_text(
+            "from flask import Flask\napp = Flask(__name__)\n"
+        )
+        (tmp_path / "src" / "models.py").write_text("class User:\n    pass\n")
+
+        server = SecureVibesMCPServer()
+
+        # Step 1: Run assessment first (required dependency)
+        result = await server.call_tool("run_assessment", {"path": str(tmp_path)})
+        assert result["error"] is False
+
+        # Step 2: Run threat modeling
+        result = await server.call_tool("run_threat_modeling", {"path": str(tmp_path)})
+
+        # Verify threat modeling succeeded
+        assert result["error"] is False
+        assert result["artifact"] == "THREAT_MODEL.json"
+        assert "threats_identified" in result
+        assert "components_analyzed" in result
+        assert "summary" in result
+
+    @pytest.mark.asyncio
+    async def test_threat_modeling_creates_artifact(self, tmp_path: Path):
+        """Test that threat modeling creates THREAT_MODEL.json artifact."""
+        (tmp_path / "app.py").write_text("# API endpoint\n")
+
+        server = SecureVibesMCPServer()
+
+        # Run assessment first
+        await server.call_tool("run_assessment", {"path": str(tmp_path)})
+
+        # Run threat modeling
+        await server.call_tool("run_threat_modeling", {"path": str(tmp_path)})
+
+        # Verify artifact was created
+        status = await server.call_tool("get_scan_status", {"path": str(tmp_path)})
+        assert status["artifacts"]["THREAT_MODEL.json"]["exists"] is True
+
+        # Retrieve and verify artifact content
+        artifact = await server.call_tool(
+            "get_artifact",
+            {"path": str(tmp_path), "artifact_name": "THREAT_MODEL.json"},
+        )
+        assert artifact["error"] is False
+        assert "version" in artifact["content"]
+        assert "threats" in artifact["content"]
+
+    @pytest.mark.asyncio
+    async def test_threat_modeling_requires_security_md(self, tmp_path: Path):
+        """Test that threat modeling fails without SECURITY.md."""
+        (tmp_path / "app.py").write_text("# app\n")
+
+        server = SecureVibesMCPServer()
+
+        # Run threat modeling WITHOUT running assessment first
+        result = await server.call_tool("run_threat_modeling", {"path": str(tmp_path)})
+
+        # Should fail with dependency error
+        assert result["error"] is True
+        assert result["code"] == "DEPENDENCY_ERROR"
+        assert "SECURITY.md" in result["message"]
+
+    @pytest.mark.asyncio
+    async def test_threat_modeling_with_focus_components(self, tmp_path: Path):
+        """Test threat modeling with component filtering."""
+        (tmp_path / "api.py").write_text("# User API\n")
+
+        server = SecureVibesMCPServer()
+
+        # Run assessment first
+        await server.call_tool("run_assessment", {"path": str(tmp_path)})
+
+        # Run threat modeling with focus_components
+        result = await server.call_tool(
+            "run_threat_modeling",
+            {"path": str(tmp_path), "focus_components": ["NonExistent"]},
+        )
+
+        # Should succeed but with no threats for non-existent component
+        assert result["error"] is False
+        assert result["threats_identified"] == 0
+        assert "invalid_components" in result
+
+    @pytest.mark.asyncio
+    async def test_assessment_then_threat_modeling_workflow(self, tmp_path: Path):
+        """Test full workflow: assessment -> threat modeling -> artifact retrieval."""
+        # Setup project with components
+        (tmp_path / "api").mkdir()
+        (tmp_path / "api" / "routes.py").write_text(
+            "# REST API routes\n"
+            "def get_users():\n"
+            "    pass\n"
+        )
+        (tmp_path / "db").mkdir()
+        (tmp_path / "db" / "models.py").write_text(
+            "# Database models\n"
+            "class User:\n"
+            "    pass\n"
+        )
+
+        server = SecureVibesMCPServer()
+
+        # Step 1: Assessment
+        assessment = await server.call_tool("run_assessment", {"path": str(tmp_path)})
+        assert assessment["error"] is False
+
+        # Step 2: Check SECURITY.md exists
+        status = await server.call_tool("get_scan_status", {"path": str(tmp_path)})
+        assert status["artifacts"]["SECURITY.md"]["exists"] is True
+
+        # Step 3: Threat modeling
+        threat_model = await server.call_tool(
+            "run_threat_modeling", {"path": str(tmp_path)}
+        )
+        assert threat_model["error"] is False
+        assert threat_model["threats_identified"] >= 0
+
+        # Step 4: Verify both artifacts exist
+        status = await server.call_tool("get_scan_status", {"path": str(tmp_path)})
+        assert status["artifacts"]["SECURITY.md"]["exists"] is True
+        assert status["artifacts"]["THREAT_MODEL.json"]["exists"] is True
