@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Any
 
+from securevibes_mcp.agents.code_review_handler import CodeReviewHandler
 from securevibes_mcp.agents.generator import SecurityDocGenerator
 from securevibes_mcp.agents.scanner import CodebaseScanner
 from securevibes_mcp.agents.threat_modeling_handler import ThreatModelingHandler
@@ -211,4 +212,52 @@ async def run_threat_modeling(
         "artifact_path": result["artifact_path"],
         "summary": result["summary"],
         "invalid_components": result.get("invalid_components", []),
+    }
+
+
+async def run_code_review(
+    path: str,
+    focus_components: list[str] | None = None,
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    """Run code review analysis for vulnerability detection.
+
+    Reads THREAT_MODEL.json artifact and scans code for vulnerability
+    patterns, generating VULNERABILITIES.json artifact.
+
+    Args:
+        path: Absolute path to the codebase.
+        focus_components: Optional list of component paths to focus on.
+
+    Returns:
+        Dictionary with analysis results or error information.
+    """
+    # Validate path
+    validation_error = _validate_path(path)
+    if validation_error:
+        return validation_error
+
+    # Run code review
+    handler = CodeReviewHandler()
+    result = handler.run(path, focus_components=focus_components)
+
+    # Convert handler result to standard response format
+    if result["status"] == "error":
+        return {
+            "error": True,
+            "code": "DEPENDENCY_ERROR",
+            "message": result["message"],
+            "path": path,
+        }
+
+    return {
+        "error": False,
+        "path": path,
+        "vulnerabilities_found": result["vulnerabilities_found"],
+        "threats_analyzed": result["threats_analyzed"],
+        "not_confirmed": result["not_confirmed"],
+        "artifact": "VULNERABILITIES.json",
+        "artifact_path": result["artifact_path"],
+        "summary": result["summary"],
+        "focus_components": result.get("focus_components", []),
     }

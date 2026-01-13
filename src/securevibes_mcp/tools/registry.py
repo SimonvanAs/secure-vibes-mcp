@@ -8,6 +8,7 @@ from securevibes_mcp.tools.handlers import (
     get_artifact,
     get_scan_status,
     run_assessment,
+    run_code_review,
     run_threat_modeling,
 )
 
@@ -118,19 +119,10 @@ CODE_REVIEW_SCHEMA = {
             "type": "string",
             "description": "Absolute path to codebase",
         },
-        "model": {
-            "type": "string",
-            "enum": ["haiku", "sonnet", "opus"],
-            "default": "sonnet",
-        },
-        "severity_filter": {
-            "type": "string",
-            "enum": ["critical", "high", "medium", "low"],
-            "description": "Only analyze threats at or above this severity",
-        },
-        "file_pattern": {
-            "type": "string",
-            "description": "Glob pattern to limit analysis",
+        "focus_components": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Component paths to focus analysis on (e.g., ['auth', 'api'])",
         },
     },
     "required": ["path"],
@@ -286,7 +278,7 @@ def get_tool_registry() -> ToolRegistry:
             name="run_code_review",
             description="Validates threats through code analysis and identifies vulnerabilities",
             inputSchema=CODE_REVIEW_SCHEMA,
-            handler=lambda **kw: not_implemented("run_code_review", **kw),
+            handler=run_code_review,
         )
     )
 
