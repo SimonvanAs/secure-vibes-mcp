@@ -40,23 +40,23 @@
 
 ## Phase 3: Code Scanner
 
-- [ ] Task 3.1: Implement file scanner
-  - [ ] Sub-task: Write tests for file traversal
-  - [ ] Sub-task: Create `CodeScanner` class
-  - [ ] Sub-task: Implement recursive file discovery
-  - [ ] Sub-task: Filter by file extensions (Python focus)
+- [x] Task 3.1: Implement file scanner `8eb54f5`
+  - [x] Sub-task: Write tests for file traversal
+  - [x] Sub-task: Create `VulnerabilityScanner` class
+  - [x] Sub-task: Implement recursive file discovery
+  - [x] Sub-task: Filter by file extensions (Python focus)
 
-- [ ] Task 3.2: Implement pattern matching engine
-  - [ ] Sub-task: Write tests for pattern detection
-  - [ ] Sub-task: Implement regex-based pattern matching
-  - [ ] Sub-task: Extract line numbers and code snippets for matches
-  - [ ] Sub-task: Associate matches with threat IDs
+- [x] Task 3.2: Implement pattern matching engine `8eb54f5`
+  - [x] Sub-task: Write tests for pattern detection
+  - [x] Sub-task: Implement regex-based pattern matching
+  - [x] Sub-task: Extract line numbers and code snippets for matches
+  - [x] Sub-task: Associate matches with threat IDs
 
-- [ ] Task 3.3: Implement component-based filtering
-  - [ ] Sub-task: Write tests for component filtering
-  - [ ] Sub-task: Support `focus_components` parameter
-  - [ ] Sub-task: Map components to relevant code paths
-  - [ ] Sub-task: Validate component names against SECURITY.md
+- [x] Task 3.3: Implement component-based filtering `7fa57a7`
+  - [x] Sub-task: Write tests for component filtering
+  - [x] Sub-task: Support `component_paths` parameter
+  - [x] Sub-task: Map components to relevant code paths
+  - [x] Sub-task: Filter files by component path patterns
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Code Scanner' (Protocol in workflow.md)
 
