@@ -2,12 +2,12 @@
 
 ## Phase 1: SECURITY.md Parser
 
-- [~] Task 1.1: Implement SECURITY.md reader
-  - [ ] Sub-task: Write tests for reading SECURITY.md artifact
-  - [ ] Sub-task: Create `SecurityDocParser` class
-  - [ ] Sub-task: Implement artifact loading via ScanStateManager
+- [x] Task 1.1: Implement SECURITY.md reader `c1239d6`
+  - [x] Sub-task: Write tests for reading SECURITY.md artifact
+  - [x] Sub-task: Create `SecurityDocParser` class
+  - [x] Sub-task: Implement artifact loading via ScanStateManager
 
-- [ ] Task 1.2: Implement component extraction
+- [~] Task 1.2: Implement component extraction
   - [ ] Sub-task: Write tests for component parsing
   - [ ] Sub-task: Parse architecture section for components
   - [ ] Sub-task: Extract component types (API, service, data store, etc.)

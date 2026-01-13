@@ -8,6 +8,31 @@ from securevibes_mcp.storage import ScanStateManager
 
 
 @dataclass
+class Component:
+    """A component extracted from the security document.
+
+    Attributes:
+        name: The component name.
+        component_type: Type of component (api, data_store, authentication, external_integration, service).
+        description: Description of the component.
+    """
+
+    name: str
+    component_type: str
+    description: str
+
+
+# Keywords for identifying component types
+COMPONENT_TYPE_KEYWORDS: dict[str, list[str]] = {
+    "api": ["api", "rest", "endpoint", "graphql", "grpc"],
+    "data_store": ["database", "db", "postgres", "mysql", "mongodb", "redis", "cache", "storage"],
+    "authentication": ["auth", "jwt", "oauth", "login", "session", "token"],
+    "external_integration": ["stripe", "payment", "sendgrid", "email", "twilio", "aws", "s3", "gateway"],
+    "service": ["service", "worker", "queue", "scheduler"],
+}
+
+
+@dataclass
 class ParsedSecurityDoc:
     """Parsed representation of a SECURITY.md document.
 
@@ -22,6 +47,65 @@ class ParsedSecurityDoc:
     sections: dict[str, str] = field(default_factory=dict)
     languages: list[str] = field(default_factory=list)
     frameworks: list[str] = field(default_factory=list)
+
+    def extract_components(self) -> list[Component]:
+        """Extract components from the architecture section.
+
+        Returns:
+            List of Component objects identified in the document.
+        """
+        architecture = self.sections.get("Architecture", "")
+        if not architecture:
+            return []
+
+        components: list[Component] = []
+        for line in architecture.split("\n"):
+            # Match list items
+            item_match = re.match(r"^[-*]\s+(.+)$", line.strip())
+            if item_match:
+                item_text = item_match.group(1).strip()
+                component = self._parse_component_line(item_text)
+                if component:
+                    components.append(component)
+
+        return components
+
+    def _parse_component_line(self, line: str) -> Component | None:
+        """Parse a single line to extract component information.
+
+        Args:
+            line: A line from the architecture section.
+
+        Returns:
+            Component if identified, None otherwise.
+        """
+        line_lower = line.lower()
+
+        # Determine component type based on keywords
+        component_type = "service"  # default
+        for ctype, keywords in COMPONENT_TYPE_KEYWORDS.items():
+            for keyword in keywords:
+                if keyword in line_lower:
+                    component_type = ctype
+                    break
+            if component_type != "service":
+                break
+
+        # Extract name (first few words or up to "for"/"to")
+        name_parts = []
+        words = line.split()
+        for word in words[:4]:  # Take first 4 words max
+            if word.lower() in ("for", "to", "with"):
+                break
+            name_parts.append(word)
+
+        name = " ".join(name_parts) if name_parts else line[:30]
+
+        return Component(
+            name=name,
+            component_type=component_type,
+            description=line,
+        )
 
 
 class SecurityDocParser:
