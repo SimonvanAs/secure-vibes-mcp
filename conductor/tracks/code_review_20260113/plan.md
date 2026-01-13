@@ -8,10 +8,10 @@
   - [x] Sub-task: Implement artifact loading via ScanStateManager
   - [x] Sub-task: Parse threat entries into structured objects
 
-- [ ] Task 1.2: Implement threat validation
-  - [ ] Sub-task: Write tests for threat entry validation
-  - [ ] Sub-task: Validate required fields (id, category, component, severity)
-  - [ ] Sub-task: Handle malformed or incomplete threat entries gracefully
+- [x] Task 1.2: Implement threat validation `c193c20`
+  - [x] Sub-task: Write tests for threat entry validation
+  - [x] Sub-task: Validate required fields (id, category, component, severity)
+  - [x] Sub-task: Handle malformed or incomplete threat entries gracefully
 
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Threat Model Reader' (Protocol in workflow.md)
 
