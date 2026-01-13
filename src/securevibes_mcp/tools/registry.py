@@ -9,6 +9,7 @@ from securevibes_mcp.tools.handlers import (
     get_scan_status,
     run_assessment,
     run_code_review,
+    run_dast,
     run_threat_modeling,
 )
 
@@ -287,7 +288,7 @@ def get_tool_registry() -> ToolRegistry:
             name="run_dast",
             description="Dynamically tests vulnerabilities via HTTP to confirm exploitability",
             inputSchema=DAST_SCHEMA,
-            handler=lambda **kw: not_implemented("run_dast", **kw),
+            handler=run_dast,
         )
     )
 

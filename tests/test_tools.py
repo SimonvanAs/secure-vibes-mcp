@@ -119,10 +119,8 @@ class TestPlaceholderResponses:
     async def test_placeholder_returns_not_implemented_error(self):
         """Test that placeholder tools return not implemented error."""
         server = SecureVibesMCPServer()
-        # Use run_dast which is still a placeholder
-        result = await server.call_tool(
-            "run_dast", {"path": "/tmp/test", "target_url": "http://localhost"}
-        )
+        # Use generate_report which is still a placeholder
+        result = await server.call_tool("generate_report", {"path": "/tmp/test"})
 
         assert result["error"] is True
         assert result["code"] == "NOT_IMPLEMENTED"
@@ -131,21 +129,18 @@ class TestPlaceholderResponses:
     async def test_placeholder_includes_tool_name(self):
         """Test that placeholder response includes the tool name."""
         server = SecureVibesMCPServer()
-        # Use run_dast which is still a placeholder
-        result = await server.call_tool(
-            "run_dast", {"path": "/tmp/test", "target_url": "http://localhost"}
-        )
+        # Use generate_report which is still a placeholder
+        result = await server.call_tool("generate_report", {"path": "/tmp/test"})
 
-        assert result["tool"] == "run_dast"
-        assert "run_dast" in result["message"]
+        assert result["tool"] == "generate_report"
+        assert "generate_report" in result["message"]
 
     @pytest.mark.asyncio
     async def test_unimplemented_agent_tools_return_placeholder(self):
         """Test that unimplemented agent tools return placeholder responses."""
         server = SecureVibesMCPServer()
-        # run_assessment, run_threat_modeling, and run_code_review are implemented
+        # run_assessment, run_threat_modeling, run_code_review, and run_dast are implemented
         agent_tools = [
-            ("run_dast", {"path": "/tmp", "target_url": "http://localhost"}),
             ("generate_report", {"path": "/tmp"}),
         ]
 

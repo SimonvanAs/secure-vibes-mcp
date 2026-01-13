@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from securevibes_mcp.agents.code_review_handler import CodeReviewHandler
+from securevibes_mcp.agents.dast_handler import DASTHandler
 from securevibes_mcp.agents.generator import SecurityDocGenerator
 from securevibes_mcp.agents.scanner import CodebaseScanner
 from securevibes_mcp.agents.threat_modeling_handler import ThreatModelingHandler
@@ -260,4 +261,58 @@ async def run_code_review(
         "artifact_path": result["artifact_path"],
         "summary": result["summary"],
         "focus_components": result.get("focus_components", []),
+    }
+
+
+async def run_dast(
+    path: str,
+    target_url: str,
+    vulnerability_ids: list[str] | None = None,
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    """Run DAST testing on confirmed vulnerabilities.
+
+    Reads VULNERABILITIES.json artifact and tests each confirmed vulnerability
+    against the running application, generating DAST_VALIDATION.json artifact.
+
+    Args:
+        path: Absolute path to the codebase.
+        target_url: Base URL of the running target application.
+        vulnerability_ids: Optional list of specific vulnerability IDs to test.
+
+    Returns:
+        Dictionary with test results or error information.
+    """
+    # Validate path
+    validation_error = _validate_path(path)
+    if validation_error:
+        return validation_error
+
+    # Run DAST testing
+    handler = DASTHandler()
+    result = await handler.run(
+        project_path=Path(path),
+        target_url=target_url,
+        vulnerability_ids=vulnerability_ids,
+    )
+
+    # Convert handler result to standard response format
+    if result["status"] == "error":
+        return {
+            "error": True,
+            "code": "DAST_ERROR",
+            "message": result["message"],
+            "path": path,
+        }
+
+    return {
+        "error": False,
+        "path": path,
+        "target_url": target_url,
+        "tested": result["tested"],
+        "exploitable": result["exploitable"],
+        "not_exploitable": result["not_exploitable"],
+        "by_severity": result.get("by_severity", {}),
+        "artifact": result.get("artifact", "DAST_VALIDATION.json"),
+        "message": result["message"],
     }
