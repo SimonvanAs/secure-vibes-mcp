@@ -55,10 +55,10 @@
   - [x] Sub-task: Generate unique threat IDs
   - [x] Sub-task: Build threat entries with all required fields
 
-- [ ] Task 3.2: Implement THREAT_MODEL.json output
-  - [ ] Sub-task: Write tests for JSON serialization
-  - [ ] Sub-task: Define THREAT_MODEL.json schema
-  - [ ] Sub-task: Implement JSON generation with proper formatting
+- [x] Task 3.2: Implement THREAT_MODEL.json output `d87c229`
+  - [x] Sub-task: Write tests for JSON serialization
+  - [x] Sub-task: Define THREAT_MODEL.json schema
+  - [x] Sub-task: Implement JSON generation with proper formatting
 
 - [ ] Task 3.3: Implement focus component filtering
   - [ ] Sub-task: Write tests for component filtering
