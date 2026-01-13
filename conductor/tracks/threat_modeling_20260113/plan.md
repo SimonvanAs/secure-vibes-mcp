@@ -7,13 +7,13 @@
   - [x] Sub-task: Create `SecurityDocParser` class
   - [x] Sub-task: Implement artifact loading via ScanStateManager
 
-- [~] Task 1.2: Implement component extraction
-  - [ ] Sub-task: Write tests for component parsing
-  - [ ] Sub-task: Parse architecture section for components
-  - [ ] Sub-task: Extract component types (API, service, data store, etc.)
-  - [ ] Sub-task: Identify entry points and trust boundaries
+- [x] Task 1.2: Implement component extraction `480e1f0`
+  - [x] Sub-task: Write tests for component parsing
+  - [x] Sub-task: Parse architecture section for components
+  - [x] Sub-task: Extract component types (API, service, data store, etc.)
+  - [x] Sub-task: Identify entry points and trust boundaries
 
-- [ ] Task 1.3: Implement data flow extraction
+- [~] Task 1.3: Implement data flow extraction
   - [ ] Sub-task: Write tests for data flow identification
   - [ ] Sub-task: Parse data flow patterns from SECURITY.md
   - [ ] Sub-task: Map connections between components

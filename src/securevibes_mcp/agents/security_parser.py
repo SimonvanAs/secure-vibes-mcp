@@ -22,6 +22,21 @@ class Component:
     description: str
 
 
+@dataclass
+class DataFlow:
+    """A data flow between components.
+
+    Attributes:
+        source: The source component name or type.
+        target: The target component name or type.
+        description: Description of the data flow.
+    """
+
+    source: str
+    target: str
+    description: str
+
+
 # Keywords for identifying component types
 COMPONENT_TYPE_KEYWORDS: dict[str, list[str]] = {
     "api": ["api", "rest", "endpoint", "graphql", "grpc"],
@@ -106,6 +121,114 @@ class ParsedSecurityDoc:
             component_type=component_type,
             description=line,
         )
+
+    def extract_data_flows(self) -> list[DataFlow]:
+        """Extract data flows from the architecture section.
+
+        Infers data flows between components based on their types and descriptions.
+
+        Returns:
+            List of DataFlow objects representing data movement between components.
+        """
+        components = self.extract_components()
+        if not components:
+            return []
+
+        flows: list[DataFlow] = []
+
+        # Keywords indicating data flow actions
+        flow_keywords = ["sends", "receives", "stores", "reads", "writes", "fetches", "calls", "connects"]
+
+        # Check each component description for flow indicators
+        for component in components:
+            desc_lower = component.description.lower()
+            for keyword in flow_keywords:
+                if keyword in desc_lower:
+                    # Found a flow indicator, create a flow
+                    flow = self._infer_flow_from_description(component, components)
+                    if flow:
+                        flows.append(flow)
+                    break
+
+        # If no explicit flows found, infer standard patterns
+        if not flows:
+            flows = self._infer_standard_flows(components)
+
+        return flows
+
+    def _infer_flow_from_description(
+        self, source_component: Component, all_components: list[Component]
+    ) -> DataFlow | None:
+        """Infer a data flow from a component's description.
+
+        Args:
+            source_component: The component with the flow description.
+            all_components: All components to find targets.
+
+        Returns:
+            DataFlow if one can be inferred, None otherwise.
+        """
+        desc_lower = source_component.description.lower()
+
+        # Try to find target component mentioned in description
+        for target in all_components:
+            if target.name == source_component.name:
+                continue
+            # Check if target type keywords appear in description
+            for keyword in COMPONENT_TYPE_KEYWORDS.get(target.component_type, []):
+                if keyword in desc_lower:
+                    return DataFlow(
+                        source=source_component.name,
+                        target=target.name,
+                        description=source_component.description,
+                    )
+
+        # Default: create flow to generic target
+        return DataFlow(
+            source=source_component.name,
+            target="external",
+            description=source_component.description,
+        )
+
+    def _infer_standard_flows(self, components: list[Component]) -> list[DataFlow]:
+        """Infer standard data flows based on component types.
+
+        Args:
+            components: List of extracted components.
+
+        Returns:
+            List of inferred DataFlow objects.
+        """
+        flows: list[DataFlow] = []
+
+        # Find components by type
+        apis = [c for c in components if c.component_type == "api"]
+        data_stores = [c for c in components if c.component_type == "data_store"]
+        auth_services = [c for c in components if c.component_type == "authentication"]
+
+        # Standard pattern: API -> Auth
+        for api in apis:
+            for auth in auth_services:
+                flows.append(
+                    DataFlow(
+                        source=api.name,
+                        target=auth.name,
+                        description=f"Authentication flow from {api.name} to {auth.name}",
+                    )
+                )
+
+        # Standard pattern: API -> Data Store
+        for api in apis:
+            for ds in data_stores:
+                flows.append(
+                    DataFlow(
+                        source=api.name,
+                        target=ds.name,
+                        description=f"Data persistence from {api.name} to {ds.name}",
+                    )
+                )
+
+        return flows
 
 
 class SecurityDocParser:

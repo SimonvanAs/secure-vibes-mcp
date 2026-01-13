@@ -325,3 +325,124 @@ A simple project.
         assert "data_store" in component_types
         assert "authentication" in component_types
         assert "external_integration" in component_types
+
+
+class TestDataFlowExtraction:
+    """Tests for data flow extraction from SECURITY.md."""
+
+    def test_extract_data_flows_returns_list(self, tmp_path: Path):
+        """Test that extract_data_flows returns a list."""
+        from securevibes_mcp.agents.security_parser import SecurityDocParser
+
+        content = """# Security Assessment
+
+## Architecture
+- User API
+- Database
+"""
+        manager = ScanStateManager(tmp_path)
+        manager.write_artifact("SECURITY.md", content)
+
+        parser = SecurityDocParser(tmp_path)
+        doc = parser.parse()
+        flows = doc.extract_data_flows()
+
+        assert isinstance(flows, list)
+
+    def test_extract_data_flow_from_description(self, tmp_path: Path):
+        """Test extracting data flow from component descriptions."""
+        from securevibes_mcp.agents.security_parser import SecurityDocParser
+
+        content = """# Security Assessment
+
+## Architecture
+- API receives requests from clients
+- Database stores user data
+"""
+        manager = ScanStateManager(tmp_path)
+        manager.write_artifact("SECURITY.md", content)
+
+        parser = SecurityDocParser(tmp_path)
+        doc = parser.parse()
+        flows = doc.extract_data_flows()
+
+        # Should identify data flows between components
+        assert len(flows) >= 1
+
+    def test_data_flow_has_source_and_target(self, tmp_path: Path):
+        """Test that data flows have source and target."""
+        from securevibes_mcp.agents.security_parser import SecurityDocParser
+
+        content = """# Security Assessment
+
+## Architecture
+- API sends data to Database
+"""
+        manager = ScanStateManager(tmp_path)
+        manager.write_artifact("SECURITY.md", content)
+
+        parser = SecurityDocParser(tmp_path)
+        doc = parser.parse()
+        flows = doc.extract_data_flows()
+
+        if flows:
+            assert flows[0].source is not None
+            assert flows[0].target is not None
+
+    def test_data_flow_has_description(self, tmp_path: Path):
+        """Test that data flows have descriptions."""
+        from securevibes_mcp.agents.security_parser import SecurityDocParser
+
+        content = """# Security Assessment
+
+## Architecture
+- API sends user credentials to Auth service
+"""
+        manager = ScanStateManager(tmp_path)
+        manager.write_artifact("SECURITY.md", content)
+
+        parser = SecurityDocParser(tmp_path)
+        doc = parser.parse()
+        flows = doc.extract_data_flows()
+
+        if flows:
+            assert flows[0].description is not None
+
+    def test_empty_architecture_returns_empty_flows(self, tmp_path: Path):
+        """Test that missing architecture returns empty flow list."""
+        from securevibes_mcp.agents.security_parser import SecurityDocParser
+
+        content = """# Security Assessment
+
+## Project Overview
+Simple project.
+"""
+        manager = ScanStateManager(tmp_path)
+        manager.write_artifact("SECURITY.md", content)
+
+        parser = SecurityDocParser(tmp_path)
+        doc = parser.parse()
+        flows = doc.extract_data_flows()
+
+        assert flows == []
+
+    def test_infer_data_flows_between_components(self, tmp_path: Path):
+        """Test inferring data flows between related components."""
+        from securevibes_mcp.agents.security_parser import SecurityDocParser
+
+        content = """# Security Assessment
+
+## Architecture
+- REST API for user management
+- PostgreSQL database for persistence
+- JWT authentication service
+"""
+        manager = ScanStateManager(tmp_path)
+        manager.write_artifact("SECURITY.md", content)
+
+        parser = SecurityDocParser(tmp_path)
+        doc = parser.parse()
+        flows = doc.extract_data_flows()
+
+        # Should infer flows: API -> Auth, API -> Database
+        assert len(flows) >= 1
