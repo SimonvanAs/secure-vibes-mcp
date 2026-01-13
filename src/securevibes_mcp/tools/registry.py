@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from securevibes_mcp.tools.handlers import (
+    generate_report,
     get_artifact,
     get_scan_status,
     run_assessment,
@@ -201,6 +202,7 @@ GET_ARTIFACT_SCHEMA = {
                 "VULNERABILITIES.json",
                 "DAST_VALIDATION.json",
                 "scan_results.json",
+                "scan_report.md",
             ],
             "description": "Name of the artifact to retrieve",
         },
@@ -297,7 +299,7 @@ def get_tool_registry() -> ToolRegistry:
             name="generate_report",
             description="Compiles all findings into structured JSON and Markdown reports",
             inputSchema=REPORT_SCHEMA,
-            handler=lambda **kw: not_implemented("generate_report", **kw),
+            handler=generate_report,
         )
     )
 

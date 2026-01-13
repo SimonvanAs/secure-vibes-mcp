@@ -119,8 +119,8 @@ class TestPlaceholderResponses:
     async def test_placeholder_returns_not_implemented_error(self):
         """Test that placeholder tools return not implemented error."""
         server = SecureVibesMCPServer()
-        # Use generate_report which is still a placeholder
-        result = await server.call_tool("generate_report", {"path": "/tmp/test"})
+        # Use get_vulnerabilities which is still a placeholder
+        result = await server.call_tool("get_vulnerabilities", {"path": "/tmp/test"})
 
         assert result["error"] is True
         assert result["code"] == "NOT_IMPLEMENTED"
@@ -129,26 +129,11 @@ class TestPlaceholderResponses:
     async def test_placeholder_includes_tool_name(self):
         """Test that placeholder response includes the tool name."""
         server = SecureVibesMCPServer()
-        # Use generate_report which is still a placeholder
-        result = await server.call_tool("generate_report", {"path": "/tmp/test"})
+        # Use get_vulnerabilities which is still a placeholder
+        result = await server.call_tool("get_vulnerabilities", {"path": "/tmp/test"})
 
-        assert result["tool"] == "generate_report"
-        assert "generate_report" in result["message"]
-
-    @pytest.mark.asyncio
-    async def test_unimplemented_agent_tools_return_placeholder(self):
-        """Test that unimplemented agent tools return placeholder responses."""
-        server = SecureVibesMCPServer()
-        # run_assessment, run_threat_modeling, run_code_review, and run_dast are implemented
-        agent_tools = [
-            ("generate_report", {"path": "/tmp"}),
-        ]
-
-        for tool_name, args in agent_tools:
-            result = await server.call_tool(tool_name, args)
-            assert result["error"] is True, f"{tool_name} should return error"
-            assert result["code"] == "NOT_IMPLEMENTED"
-            assert result["tool"] == tool_name
+        assert result["tool"] == "get_vulnerabilities"
+        assert "get_vulnerabilities" in result["message"]
 
     @pytest.mark.asyncio
     async def test_unimplemented_query_tools_return_placeholder(self):

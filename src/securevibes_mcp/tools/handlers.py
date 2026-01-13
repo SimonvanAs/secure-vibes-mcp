@@ -6,6 +6,7 @@ from typing import Any
 from securevibes_mcp.agents.code_review_handler import CodeReviewHandler
 from securevibes_mcp.agents.dast_handler import DASTHandler
 from securevibes_mcp.agents.generator import SecurityDocGenerator
+from securevibes_mcp.agents.report_handler import ReportHandler
 from securevibes_mcp.agents.scanner import CodebaseScanner
 from securevibes_mcp.agents.threat_modeling_handler import ThreatModelingHandler
 from securevibes_mcp.storage import ScanStateManager
@@ -314,5 +315,63 @@ async def run_dast(
         "not_exploitable": result["not_exploitable"],
         "by_severity": result.get("by_severity", {}),
         "artifact": result.get("artifact", "DAST_VALIDATION.json"),
+        "message": result["message"],
+    }
+
+
+async def generate_report(
+    path: str,
+    format: str = "both",
+    **_kwargs: Any,
+) -> dict[str, Any]:
+    """Generate security report from scan artifacts.
+
+    Reads all available artifacts and generates comprehensive JSON and/or
+    Markdown reports.
+
+    Args:
+        path: Absolute path to the codebase.
+        format: Output format - "json", "markdown", or "both".
+
+    Returns:
+        Dictionary with report generation results or error information.
+    """
+    # Validate path
+    validation_error = _validate_path(path)
+    if validation_error:
+        return validation_error
+
+    # Validate format
+    valid_formats = ("json", "markdown", "both")
+    if format not in valid_formats:
+        return {
+            "error": True,
+            "code": "INVALID_FORMAT",
+            "message": f"Invalid format: {format}. Must be one of: {valid_formats}",
+            "path": path,
+        }
+
+    # Generate report
+    handler = ReportHandler()
+    result = handler.run(
+        project_path=Path(path),
+        format=format,
+    )
+
+    # Convert handler result to standard response format
+    if result["status"] == "error":
+        return {
+            "error": True,
+            "code": "REPORT_ERROR",
+            "message": result["message"],
+            "path": path,
+        }
+
+    return {
+        "error": False,
+        "path": path,
+        "format": format,
+        "artifacts": result["artifacts"],
+        "summary": result["summary"],
         "message": result["message"],
     }
