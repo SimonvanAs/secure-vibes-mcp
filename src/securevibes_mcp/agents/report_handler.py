@@ -18,19 +18,11 @@ from securevibes_mcp.agents.vulnerability_reader import VulnerabilityReader
 
 # CWE-based recommendations
 CWE_RECOMMENDATIONS: dict[str, dict[str, str]] = {
-    "CWE-89": {
-        "title": "Fix SQL Injection vulnerabilities",
+    "CWE-22": {
+        "title": "Fix Path Traversal vulnerabilities",
         "description": (
-            "Use parameterized queries or prepared statements instead of "
-            "string concatenation. Consider using an ORM that handles "
-            "escaping automatically."
-        ),
-    },
-    "CWE-79": {
-        "title": "Fix Cross-Site Scripting (XSS) vulnerabilities",
-        "description": (
-            "Sanitize and encode all user input before rendering in HTML. "
-            "Use context-aware output encoding and Content Security Policy headers."
+            "Validate and sanitize file paths. Use allowlists for permitted "
+            "directories. Resolve paths and verify they remain within expected bounds."
         ),
     },
     "CWE-78": {
@@ -41,18 +33,115 @@ CWE_RECOMMENDATIONS: dict[str, dict[str, str]] = {
             "for permitted values."
         ),
     },
-    "CWE-22": {
-        "title": "Fix Path Traversal vulnerabilities",
+    "CWE-79": {
+        "title": "Fix Cross-Site Scripting (XSS) vulnerabilities",
         "description": (
-            "Validate and sanitize file paths. Use allowlists for permitted "
-            "directories. Resolve paths and verify they remain within expected bounds."
+            "Sanitize and encode all user input before rendering in HTML. "
+            "Use context-aware output encoding and Content Security Policy headers."
+        ),
+    },
+    "CWE-89": {
+        "title": "Fix SQL Injection vulnerabilities",
+        "description": (
+            "Use parameterized queries or prepared statements instead of "
+            "string concatenation. Consider using an ORM that handles "
+            "escaping automatically."
+        ),
+    },
+    "CWE-208": {
+        "title": "Use constant-time comparison for secrets",
+        "description": (
+            "Replace == comparisons for passwords, tokens, and secrets with "
+            "hmac.compare_digest() or secrets.compare_digest() to prevent "
+            "timing-based attacks."
+        ),
+    },
+    "CWE-330": {
+        "title": "Use cryptographically secure random generators",
+        "description": (
+            "Replace random module with secrets module for security-sensitive "
+            "operations like token generation. Use secrets.token_hex(), "
+            "secrets.token_urlsafe(), or secrets.token_bytes()."
+        ),
+    },
+    "CWE-347": {
+        "title": "Fix JWT verification issues",
+        "description": (
+            "Always verify JWT signatures. Never use algorithm='none'. "
+            "Specify allowed algorithms explicitly and validate 'alg' header "
+            "against allowlist."
+        ),
+    },
+    "CWE-352": {
+        "title": "Implement CSRF protection",
+        "description": (
+            "Enable CSRF protection for all state-changing endpoints. "
+            "Use framework-provided CSRF tokens (Flask-WTF, Django CSRF). "
+            "Implement SameSite cookie attribute."
         ),
     },
     "CWE-502": {
         "title": "Fix Insecure Deserialization vulnerabilities",
         "description": (
             "Avoid deserializing untrusted data. Use safe serialization formats "
-            "like JSON. Implement integrity checks and type validation."
+            "like JSON. For YAML, use yaml.safe_load() with SafeLoader. "
+            "Never use pickle on untrusted data."
+        ),
+    },
+    "CWE-547": {
+        "title": "Remove hardcoded security constants",
+        "description": (
+            "Move internal IPs, hostnames, and configuration values to "
+            "environment variables or configuration files. Avoid committing "
+            "infrastructure details to source control."
+        ),
+    },
+    "CWE-601": {
+        "title": "Fix Open Redirect vulnerabilities",
+        "description": (
+            "Validate redirect URLs against an allowlist of trusted domains. "
+            "Use relative URLs for internal redirects. Never redirect to "
+            "user-controlled URLs without validation."
+        ),
+    },
+    "CWE-614": {
+        "title": "Set Secure flag on cookies",
+        "description": (
+            "Set the Secure flag on all cookies containing sensitive data. "
+            "This ensures cookies are only transmitted over HTTPS connections. "
+            "Configure SESSION_COOKIE_SECURE=True in Flask."
+        ),
+    },
+    "CWE-943": {
+        "title": "Fix NoSQL Injection vulnerabilities",
+        "description": (
+            "Use parameterized queries with MongoDB/NoSQL databases. "
+            "Validate and sanitize user input before using in queries. "
+            "Avoid using $where with user-controlled data."
+        ),
+    },
+    "CWE-1004": {
+        "title": "Set HttpOnly flag on cookies",
+        "description": (
+            "Set the HttpOnly flag on session cookies to prevent access "
+            "from JavaScript. This mitigates XSS-based session theft. "
+            "Configure SESSION_COOKIE_HTTPONLY=True in Flask."
+        ),
+    },
+    "CWE-1021": {
+        "title": "Implement clickjacking protection",
+        "description": (
+            "Set X-Frame-Options header to DENY or SAMEORIGIN. "
+            "Use Content-Security-Policy frame-ancestors directive. "
+            "Configure X_FRAME_OPTIONS in Flask/Django settings."
+        ),
+    },
+    "CWE-1275": {
+        "title": "Set SameSite attribute on cookies",
+        "description": (
+            "Set SameSite=Lax or SameSite=Strict on cookies to prevent "
+            "CSRF attacks. Avoid SameSite=None unless cross-site access "
+            "is required. Configure SESSION_COOKIE_SAMESITE in Flask."
         ),
     },
 }
