@@ -13,3 +13,9 @@ This file tracks all major tracks for the project. Each track has its own detail
 ## [x] Track: Implement the Threat Modeling Agent
 
 *Link: [./conductor/tracks/threat_modeling_20260113/](./conductor/tracks/threat_modeling_20260113/)*
+
+---
+
+## [~] Track: Implement the Code Review Agent
+
+*Link: [./conductor/tracks/code_review_20260113/](./conductor/tracks/code_review_20260113/)*
