@@ -109,6 +109,9 @@ class TestMCPProtocolIntegration:
             "get_scan_status",
             "get_artifact",
             "get_vulnerabilities",
+            "suppress_vulnerability",
+            "remove_suppression",
+            "list_suppressions",
         }
         assert tool_names == expected
 

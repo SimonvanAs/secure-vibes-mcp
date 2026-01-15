@@ -10,6 +10,7 @@ VALID_ARTIFACTS = frozenset(
         "SECURITY.md",
         "THREAT_MODEL.json",
         "VULNERABILITIES.json",
+        "SUPPRESSIONS.json",
         "DAST_VALIDATION.json",
         "scan_results.json",
         "scan_report.md",

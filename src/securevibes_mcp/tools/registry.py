@@ -9,10 +9,13 @@ from securevibes_mcp.tools.handlers import (
     get_artifact,
     get_scan_status,
     get_vulnerabilities,
+    list_suppressions,
+    remove_suppression,
     run_assessment,
     run_code_review,
     run_dast,
     run_threat_modeling,
+    suppress_vulnerability,
 )
 
 
@@ -201,6 +204,7 @@ GET_ARTIFACT_SCHEMA = {
                 "SECURITY.md",
                 "THREAT_MODEL.json",
                 "VULNERABILITIES.json",
+                "SUPPRESSIONS.json",
                 "DAST_VALIDATION.json",
                 "scan_results.json",
                 "scan_report.md",
@@ -231,10 +235,79 @@ GET_VULNERABILITIES_SCHEMA = {
             "type": "string",
             "description": "Filter by file path pattern",
         },
+        "include_suppressed": {
+            "type": "boolean",
+            "default": False,
+            "description": "Include suppressed vulnerabilities in results",
+        },
         "limit": {
             "type": "integer",
             "default": 10,
             "description": "Maximum number of results",
+        },
+    },
+    "required": ["path"],
+}
+
+SUPPRESS_VULNERABILITY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "path": {
+            "type": "string",
+            "description": "Absolute path to codebase",
+        },
+        "vuln_id": {
+            "type": "string",
+            "description": "Vulnerability ID to suppress (e.g., 'VULN-001')",
+        },
+        "file_pattern": {
+            "type": "string",
+            "description": "File path pattern to suppress (substring match)",
+        },
+        "cwe_id": {
+            "type": "string",
+            "description": "CWE ID to suppress all matching vulnerabilities",
+        },
+        "reason": {
+            "type": "string",
+            "enum": ["false_positive", "acceptable_risk", "will_not_fix", "mitigated"],
+            "default": "false_positive",
+            "description": "Reason for suppression",
+        },
+        "justification": {
+            "type": "string",
+            "description": "Detailed justification for the suppression",
+        },
+    },
+    "required": ["path"],
+}
+
+REMOVE_SUPPRESSION_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "path": {
+            "type": "string",
+            "description": "Absolute path to codebase",
+        },
+        "suppression_id": {
+            "type": "string",
+            "description": "Suppression ID to remove (e.g., 'SUPP-001')",
+        },
+    },
+    "required": ["path", "suppression_id"],
+}
+
+LIST_SUPPRESSIONS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "path": {
+            "type": "string",
+            "description": "Absolute path to codebase",
+        },
+        "include_expired": {
+            "type": "boolean",
+            "default": False,
+            "description": "Include expired suppressions",
         },
     },
     "required": ["path"],
@@ -329,6 +402,34 @@ def get_tool_registry() -> ToolRegistry:
             description="Retrieves filtered vulnerability data",
             inputSchema=GET_VULNERABILITIES_SCHEMA,
             handler=get_vulnerabilities,
+        )
+    )
+
+    # Register suppression tools
+    registry.register(
+        Tool(
+            name="suppress_vulnerability",
+            description="Suppresses a vulnerability or pattern as false positive or accepted risk",
+            inputSchema=SUPPRESS_VULNERABILITY_SCHEMA,
+            handler=suppress_vulnerability,
+        )
+    )
+
+    registry.register(
+        Tool(
+            name="remove_suppression",
+            description="Removes a suppression by ID",
+            inputSchema=REMOVE_SUPPRESSION_SCHEMA,
+            handler=remove_suppression,
+        )
+    )
+
+    registry.register(
+        Tool(
+            name="list_suppressions",
+            description="Lists all suppressions for a project",
+            inputSchema=LIST_SUPPRESSIONS_SCHEMA,
+            handler=list_suppressions,
         )
     )
 

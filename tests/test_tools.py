@@ -14,6 +14,9 @@ EXPECTED_TOOLS = [
     "get_scan_status",
     "get_artifact",
     "get_vulnerabilities",
+    "suppress_vulnerability",
+    "remove_suppression",
+    "list_suppressions",
 ]
 
 
@@ -24,7 +27,7 @@ class TestToolRegistration:
         """Test that server has tools registered."""
         server = SecureVibesMCPServer()
         tools = server.list_tools()
-        assert len(tools) == 8
+        assert len(tools) == 11
 
     def test_all_expected_tools_registered(self):
         """Test that all expected tools are registered."""
